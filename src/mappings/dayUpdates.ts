@@ -1,31 +1,31 @@
 import { PairHourData } from './../types/schema'
 /* eslint-disable prefer-const */
 import { BigInt, BigDecimal, EthereumEvent } from '@graphprotocol/graph-ts'
-import { Pair, Bundle, Token, UniswapFactory, UniswapDayData, PairDayData, TokenDayData } from '../types/schema'
+import { Pair, Bundle, Token, PangolinFactory, pangolinDayData, PairDayData, TokenDayData } from '../types/schema'
 import { ONE_BI, ZERO_BD, ZERO_BI, FACTORY_ADDRESS } from './helpers'
 
-export function updateUniswapDayData(event: EthereumEvent): UniswapDayData {
-  let uniswap = UniswapFactory.load(FACTORY_ADDRESS)
+export function updatepangolinDayData(event: EthereumEvent): pangolinDayData {
+  let pangolin = PangolinFactory.load(FACTORY_ADDRESS)
   let timestamp = event.block.timestamp.toI32()
   let dayID = timestamp / 86400
   let dayStartTimestamp = dayID * 86400
-  let uniswapDayData = UniswapDayData.load(dayID.toString())
-  if (uniswapDayData === null) {
-    uniswapDayData = new UniswapDayData(dayID.toString())
-    uniswapDayData.date = dayStartTimestamp
-    uniswapDayData.dailyVolumeUSD = ZERO_BD
-    uniswapDayData.dailyVolumeETH = ZERO_BD
-    uniswapDayData.totalVolumeUSD = ZERO_BD
-    uniswapDayData.totalVolumeETH = ZERO_BD
-    uniswapDayData.dailyVolumeUntracked = ZERO_BD
+  let pangolinDayData = pangolinDayData.load(dayID.toString())
+  if (pangolinDayData === null) {
+    pangolinDayData = new pangolinDayData(dayID.toString())
+    pangolinDayData.date = dayStartTimestamp
+    pangolinDayData.dailyVolumeUSD = ZERO_BD
+    pangolinDayData.dailyVolumeETH = ZERO_BD
+    pangolinDayData.totalVolumeUSD = ZERO_BD
+    pangolinDayData.totalVolumeETH = ZERO_BD
+    pangolinDayData.dailyVolumeUntracked = ZERO_BD
   }
 
-  uniswapDayData.totalLiquidityUSD = uniswap.totalLiquidityUSD
-  uniswapDayData.totalLiquidityETH = uniswap.totalLiquidityETH
-  uniswapDayData.txCount = uniswap.txCount
-  uniswapDayData.save()
+  pangolinDayData.totalLiquidityUSD = pangolin.totalLiquidityUSD
+  pangolinDayData.totalLiquidityETH = pangolin.totalLiquidityETH
+  pangolinDayData.txCount = pangolin.txCount
+  pangolinDayData.save()
 
-  return uniswapDayData as UniswapDayData
+  return pangolinDayData as pangolinDayData
 }
 
 export function updatePairDayData(event: EthereumEvent): PairDayData {
