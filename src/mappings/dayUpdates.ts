@@ -1,17 +1,17 @@
 import { PairHourData } from './../types/schema'
 /* eslint-disable prefer-const */
 import { BigInt, BigDecimal, EthereumEvent } from '@graphprotocol/graph-ts'
-import { Pair, Bundle, Token, PangolinFactory, pangolinDayData, PairDayData, TokenDayData } from '../types/schema'
+import { Pair, Bundle, Token, PangolinFactory, PangolinDayData, PairDayData, TokenDayData } from '../types/schema'
 import { ONE_BI, ZERO_BD, ZERO_BI, FACTORY_ADDRESS } from './helpers'
 
-export function updatepangolinDayData(event: EthereumEvent): pangolinDayData {
+export function updatePangolinDayData(event: EthereumEvent): PangolinDayData {
   let pangolin = PangolinFactory.load(FACTORY_ADDRESS)
   let timestamp = event.block.timestamp.toI32()
   let dayID = timestamp / 86400
   let dayStartTimestamp = dayID * 86400
-  let pangolinDayData = pangolinDayData.load(dayID.toString())
+  let pangolinDayData = PangolinDayData.load(dayID.toString())
   if (pangolinDayData === null) {
-    pangolinDayData = new pangolinDayData(dayID.toString())
+    pangolinDayData = new PangolinDayData(dayID.toString())
     pangolinDayData.date = dayStartTimestamp
     pangolinDayData.dailyVolumeUSD = ZERO_BD
     pangolinDayData.dailyVolumeETH = ZERO_BD
@@ -25,7 +25,7 @@ export function updatepangolinDayData(event: EthereumEvent): pangolinDayData {
   pangolinDayData.txCount = pangolin.txCount
   pangolinDayData.save()
 
-  return pangolinDayData as pangolinDayData
+  return pangolinDayData as PangolinDayData
 }
 
 export function updatePairDayData(event: EthereumEvent): PairDayData {
