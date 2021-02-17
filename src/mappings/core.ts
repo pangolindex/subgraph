@@ -17,6 +17,7 @@ import {
   convertTokenToDecimal,
   ADDRESS_ZERO,
   FACTORY_ADDRESS,
+  ROUTER_ADDRESS,
   ONE_BI,
   createUser,
   createLiquidityPosition,
@@ -25,6 +26,28 @@ import {
   createLiquiditySnapshot
 } from './helpers'
 
+let MINING_POOLS: string[] = [
+  "0xa16381eae6285123c323a665d4d99a6bcfaac307", // avax-eth
+  "0x4f019452f51bba0250ec8b69d64282b79fc8bd9f", // avax-usdt
+  "0x01897e996eefff65ae9999c02d1d8d7e9e0c0352", // avax-wbtc
+  "0x8fd2755c6ae7252753361991bdcd6ff55bdc01ce", // avax-png
+  "0x7d7ecd4d370384b17dfc1b4155a8410e97841b65", // avax-link
+  "0xb5b9ded9c193731f816ae1f8ffb7f8b0fae40c88", // avax-dai
+  "0xe4d9ae03859dac6d65432d557f75b9b588a38ee1", // avax-uni
+  "0x88f26b81c9cae4ea168e31bc6353f493fda29661", // avax-sushi
+  "0xee0023108918884181e48902f7c797573f413ece", // avax-aave
+  "0x797cbcf107519f4b279fc5db372e292cdf7e6956", // avax-yfi
+  "0x4e550fefbf888cb43ead73d821f646f43b1f2309", // png-eth
+  "0x7accc6f16bf8c0dce22371fbd914c6b5b402bf9f", // png-usdt
+  "0x99b06b9673fea30ba55179b1433ce909fdc28723", // png-wbtc
+  "0x4ad6e309805cb477010bea9ffc650cb27c1a9504", // png-link
+  "0x8866077f08b076360c25f4fd7fbc959ef135474c", // png-dai
+  "0x41188b4332fe68135d1524e43db98e81519d263b", // png-uni
+  "0x6955cb85edea63f861c0be39c3d7f8921606c4dc", // png-sushi
+  "0xb921a3ae9ceda66fa8a74dbb0946367fb14fae34", // png-aave
+  "0x2061298c76cd76219b9b44439e96a75f19c61f7f", // png-yfi
+]
+
 function isCompleteMint(mintId: string): boolean {
   return MintEvent.load(mintId).sender !== null // sufficient checks
 }
@@ -32,6 +55,11 @@ function isCompleteMint(mintId: string): boolean {
 export function handleTransfer(event: Transfer): void {
   // ignore initial transfers for first adds
   if (event.params.to.toHexString() == ADDRESS_ZERO && event.params.value.equals(BigInt.fromI32(1000))) {
+    return
+  }
+
+  // skip if staking/unstaking
+  if (MINING_POOLS.includes(event.params.from.toHexString()) || MINING_POOLS.includes(event.params.to.toHexString())) {
     return
   }
 
@@ -393,6 +421,15 @@ export function handleBurn(event: Burn): void {
 }
 
 export function handleSwap(event: Swap): void {
+  // check if sender and dest are equal to the router
+  // if so, change the to address to the tx issuer
+  let dest: Address
+  if (event.params.sender == Address.fromString(ROUTER_ADDRESS) && event.params.to == Address.fromString(ROUTER_ADDRESS)) {
+    dest = event.transaction.from
+  } else {
+    dest = event.params.to
+  }
+
   let pair = Pair.load(event.address.toHexString())
   let token0 = Token.load(pair.token0)
   let token1 = Token.load(pair.token1)
@@ -487,7 +524,7 @@ export function handleSwap(event: Swap): void {
   swap.amount1In = amount1In
   swap.amount0Out = amount0Out
   swap.amount1Out = amount1Out
-  swap.to = event.params.to
+  swap.to = dest
   swap.from = event.transaction.from
   swap.logIndex = event.logIndex
   // use the tracked amount if we have it

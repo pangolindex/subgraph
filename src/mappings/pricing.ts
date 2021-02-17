@@ -44,15 +44,23 @@ export function getEthPriceInUSD(): BigDecimal {
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
   WETH_ADDRESS, // WAVAX
-  '0xa47a05ed74f80fa31621612887d26df40bcf0ca9', // DAS
-  '0x97b99b4009041e948337ebca7e6ae52f9f6e633c' // CON
+  '0x60781c2586d68229fde47564546784ab3faca982', // PNG
+  '0xf20d962a6c8f70c731bd838a3a388d7d48fa6e15', // eth
+  '0xde3a24028580884448a5397872046a019649b084', // usdt
+  '0xb3fe5374f67d7a22886a0ee082b2e2f9d2651651', // link
+  '0x8ce2dee54bb9921a2ae0a63dbb2df8ed88b91dd9', // aave
+  '0xf39f9671906d8630812f9d9863bbef5d523c84ab', // uni
+  '0x408d4cd0adb7cebd1f1a1c33a0ba2098e1295bab', // wbtc
+  '0x39cf1bd5f15fb22ec3d9ff86b0727afc203427cc', // sushi
+  '0xba7deebbfc5fa1100fb055a87773e1e99cd3507a', // dai
+  '0x99519acb025a0e0d44c3875a4bbf03af65933627' // yfi
 ]
 
 // minimum liquidity required to count towards tracked volume for pairs with small # of Lps
-let MINIMUM_USD_THRESHOLD_NEW_PAIRS = BigDecimal.fromString('0')
+let MINIMUM_USD_THRESHOLD_NEW_PAIRS = BigDecimal.fromString('10')
 
 // minimum liquidity for price to get tracked
-let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('0')
+let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('1')
 
 /**
  * Search through graph to find derived Eth per token.
