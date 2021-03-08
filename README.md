@@ -14,6 +14,14 @@ This subgraph dynamically tracks any pair created by the Pangolin factory. It tr
 
 Please ensure you have [Docker](https://www.docker.com/) and [Docker compose](https://www.docker.com/) installed locally.
 
+Now run
+```bash
+docker-compose up
+yarn
+yarn deploy-local
+```
+You can now navigate to http://127.0.0.1:8000/subgraphs/name/dasconnor/pangolindex/graphql to interact with the GraphQL endpoint.
+
 Make sure to update package.json settings to point to your own graph account.
 
 ## Queries
