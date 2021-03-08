@@ -12,6 +12,8 @@ This subgraph dynamically tracks any pair created by the Pangolin factory. It tr
 
 ## Running Locally
 
+Please ensure you have [Docker](https://www.docker.com/) and [Docker compose](https://www.docker.com/) installed locally.
+
 Make sure to update package.json settings to point to your own graph account.
 
 ## Queries
