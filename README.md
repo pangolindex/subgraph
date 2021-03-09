@@ -14,6 +14,10 @@ This subgraph dynamically tracks any pair created by the Pangolin factory. It tr
 
 Please ensure you have [Docker](https://www.docker.com/) and [Docker compose](https://www.docker.com/) installed locally.
 
+The `docker-compose.yaml` file is currently setup to connect to mainnet however if you'd like to change that you can replace line 20 with:
+* `ethereum: 'mainnet:https://api.avax-test.network/ext/bc/C/rpc'` for Fuji 
+`ethereum: 'mainnet:http://localhost:9650/ext/bc/C/rpc'` for a local Avash node
+
 Now run
 ```bash
 docker-compose up
