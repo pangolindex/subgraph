@@ -11,6 +11,23 @@ This subgraph dynamically tracks any pair created by the Pangolin factory. It tr
 - historical data on Pangolin, pairs or tokens, aggregated by day
 
 ## Running Locally
+Please ensure you have [Docker](https://www.docker.com/) and [Docker compose](https://www.docker.com/) installed locally.
+
+The `docker-compose.yaml` file is currently setup to connect to a locally running `Ganache` blockchain.
+
+Now run
+```bash
+yarn
+yarn run-local
+```
+
+Now open another terminal and run the following commands
+```bash
+yarn codegen
+yarn create-local
+yarn deploy-local
+```
+You can now navigate to http://127.0.0.1:8000/subgraphs/name/dasconnor/pangolindex/graphql to interact with the GraphQL endpoint.
 
 Make sure to update package.json settings to point to your own graph account.
 
