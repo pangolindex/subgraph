@@ -14,19 +14,14 @@ This subgraph dynamically tracks any pair created by the Pangolin factory. It tr
 ### Prerequisites
 * [Docker](https://www.docker.com/)
 * [Docker compose](https://www.docker.com/) installed locally.
+* **If you're running a local node** [Avalanche Go](https://github.com/ava-labs/avalanchego/releases)
 
-Run the following:
-```bash
-docker-compose up
-```
+To run the application, you'll need to specify the URL in the `.env` file. For example
+* Mainnet = http://api.avax.network/ext/bc/C/rpc
+* Fuji = http://api.avax-test.network/ext/bc/C/rpc
+* Local = localhost
 
-The `docker-compose.yaml` file is currently setup to connect to a locally running `Avalanche` blockchain.
-
-Now run
-```bash
-yarn
-yarn run-local
-```
+Now you can run `docker-compose up`
 
 Now open another terminal and run the following commands
 ```bash

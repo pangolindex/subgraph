@@ -6,7 +6,6 @@
   "scripts": {
     "codegen": "graph codegen --output-dir src/types/",
     "build": "graph build",
-    "run-local": "concurrently --kill-others \"ganache-cli -h 0.0.0.0\" \"docker-compose up\"",
     "create-local": "graph create dasconnor/pangolindex --node http://127.0.0.1:8020",
     "deploy-local": "graph deploy dasconnor/pangolindex --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
     "deploy": "graph deploy dasconnor/pangolin --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug",

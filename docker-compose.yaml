@@ -1,10 +1,5 @@
 version: '3'
 services:
-  avalanche: 
-    image: avaplatform/avalanchego
-    ports:
-      - "9650:9650"
-      - "9651:9651"
   graph-node:
     image: graphprotocol/graph-node
     ports:
@@ -14,7 +9,6 @@ services:
       - '8030:8030'
       - '8040:8040'
     depends_on:
-      - avalanche
       - ipfs
       - postgres
     environment:
@@ -23,7 +17,7 @@ services:
       postgres_pass: let-me-in
       postgres_db: graph-node
       ipfs: 'ipfs:5001'
-      ethereum: 'mainnet:http://host.docker.internal:9650'
+      ethereum: 'mainnet:$URL'
       RUST_LOG: info
   ipfs:
     image: ipfs/go-ipfs:v0.4.23
