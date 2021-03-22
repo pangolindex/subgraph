@@ -17,8 +17,6 @@ This subgraph dynamically tracks any pair created by the Pangolin factory. It tr
 
 Run the following:
 ```bash
-docker pull avaplatform/avalanchego
-docker run -ti -p 9650:9650 -p 9651:9651 avaplatform/avalanchego /avalanchego/build/avalanchego --network-id=fuji --http-host=localhost
 docker-compose up
 ```
 
