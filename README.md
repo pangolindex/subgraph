@@ -11,9 +11,18 @@ This subgraph dynamically tracks any pair created by the Pangolin factory. It tr
 - historical data on Pangolin, pairs or tokens, aggregated by day
 
 ## Running Locally
-Please ensure you have [Docker](https://www.docker.com/) and [Docker compose](https://www.docker.com/) installed locally.
+### Prerequisites
+* [Docker](https://www.docker.com/)
+* [Docker compose](https://www.docker.com/) installed locally.
 
-The `docker-compose.yaml` file is currently setup to connect to a locally running `Ganache` blockchain.
+Run the following:
+```bash
+docker pull avaplatform/avalanchego
+docker run -ti -p 9650:9650 -p 9651:9651 avaplatform/avalanchego /avalanchego/build/avalanchego --network-id=fuji --http-host=localhost
+docker-compose up
+```
+
+The `docker-compose.yaml` file is currently setup to connect to a locally running `Avalanche` blockchain.
 
 Now run
 ```bash
