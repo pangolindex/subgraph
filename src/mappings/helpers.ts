@@ -30,8 +30,8 @@ export function bigDecimalExp18(): BigDecimal {
   return BigDecimal.fromString('1000000000000000000')
 }
 
-export function convertEthToDecimal(eth: BigInt): BigDecimal {
-  return eth.toBigDecimal().div(exponentToBigDecimal(18))
+export function convertAvaxToDecimal(avax: BigInt): BigDecimal {
+  return avax.toBigDecimal().div(exponentToBigDecimal(18))
 }
 
 export function convertTokenToDecimal(tokenAmount: BigInt, exchangeDecimals: BigInt): BigDecimal {
@@ -50,16 +50,16 @@ export function equalToZero(value: BigDecimal): boolean {
   return false
 }
 
-export function isNullEthValue(value: string): boolean {
+export function isNullAvaxValue(value: string): boolean {
   return value == '0x0000000000000000000000000000000000000000000000000000000000000001'
 }
 
 export function fetchTokenSymbol(tokenAddress: Address): string {
   // hard coded overrides
-  if (tokenAddress.toHexString() == '0xe0b7927c4af23765cb51314a0e0521a9645f0e2a') {
+  if (tokenAddress.toHexString() == '0xe0b7927c4af23765cb51314a0e0521a9645f0e2a') {  // TODO: address not valid on Avalanche
     return 'DGD'
   }
-  if (tokenAddress.toHexString() == '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9') {
+  if (tokenAddress.toHexString() == '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9') {  // TODO: address not valid on Avalanche
     return 'AAVE'
   }
 
@@ -73,7 +73,7 @@ export function fetchTokenSymbol(tokenAddress: Address): string {
     let symbolResultBytes = contractSymbolBytes.try_symbol()
     if (!symbolResultBytes.reverted) {
       // for broken pairs that have no symbol function exposed
-      if (!isNullEthValue(symbolResultBytes.value.toHexString())) {
+      if (!isNullAvaxValue(symbolResultBytes.value.toHexString())) {
         symbolValue = symbolResultBytes.value.toString()
       }
     }
@@ -86,10 +86,10 @@ export function fetchTokenSymbol(tokenAddress: Address): string {
 
 export function fetchTokenName(tokenAddress: Address): string {
   // hard coded overrides
-  if (tokenAddress.toHexString() == '0xe0b7927c4af23765cb51314a0e0521a9645f0e2a') {
+  if (tokenAddress.toHexString() == '0xe0b7927c4af23765cb51314a0e0521a9645f0e2a') {  // TODO: address not valid on Avalanche
     return 'DGD'
   }
-  if (tokenAddress.toHexString() == '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9') {
+  if (tokenAddress.toHexString() == '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9') {  // TODO: address not valid on Avalanche
     return 'Aave Token'
   }
 
@@ -103,7 +103,7 @@ export function fetchTokenName(tokenAddress: Address): string {
     let nameResultBytes = contractNameBytes.try_name()
     if (!nameResultBytes.reverted) {
       // for broken exchanges that have no name function exposed
-      if (!isNullEthValue(nameResultBytes.value.toHexString())) {
+      if (!isNullAvaxValue(nameResultBytes.value.toHexString())) {
         nameValue = nameResultBytes.value.toString()
       }
     }
@@ -126,7 +126,7 @@ export function fetchTokenTotalSupply(tokenAddress: Address): BigInt {
 
 export function fetchTokenDecimals(tokenAddress: Address): BigInt {
   // hardcode overrides
-  if (tokenAddress.toHexString() == '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9') {
+  if (tokenAddress.toHexString() == '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9') {  // TODO: address not valid on Avalanche
     return BigInt.fromI32(18)
   }
 
@@ -183,8 +183,8 @@ export function createLiquiditySnapshot(position: LiquidityPosition, event: Ethe
   snapshot.block = event.block.number.toI32()
   snapshot.user = position.user
   snapshot.pair = position.pair
-  snapshot.token0PriceUSD = token0.derivedETH.times(bundle.ethPrice)
-  snapshot.token1PriceUSD = token1.derivedETH.times(bundle.ethPrice)
+  snapshot.token0PriceUSD = token0.derivedAVAX.times(bundle.avaxPrice)
+  snapshot.token1PriceUSD = token1.derivedAVAX.times(bundle.avaxPrice)
   snapshot.reserve0 = pair.reserve0
   snapshot.reserve1 = pair.reserve1
   snapshot.reserveUSD = pair.reserveUSD

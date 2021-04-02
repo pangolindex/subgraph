@@ -14,14 +14,14 @@ export function updatePangolinDayData(event: EthereumEvent): PangolinDayData {
     pangolinDayData = new PangolinDayData(dayID.toString())
     pangolinDayData.date = dayStartTimestamp
     pangolinDayData.dailyVolumeUSD = ZERO_BD
-    pangolinDayData.dailyVolumeETH = ZERO_BD
+    pangolinDayData.dailyVolumeAVAX = ZERO_BD
     pangolinDayData.totalVolumeUSD = ZERO_BD
-    pangolinDayData.totalVolumeETH = ZERO_BD
+    pangolinDayData.totalVolumeAVAX = ZERO_BD
     pangolinDayData.dailyVolumeUntracked = ZERO_BD
   }
 
   pangolinDayData.totalLiquidityUSD = pangolin.totalLiquidityUSD
-  pangolinDayData.totalLiquidityETH = pangolin.totalLiquidityETH
+  pangolinDayData.totalLiquidityAVAX = pangolin.totalLiquidityAVAX
   pangolinDayData.txCount = pangolin.txCount
   pangolinDayData.save()
 
@@ -104,17 +104,17 @@ export function updateTokenDayData(token: Token, event: EthereumEvent): TokenDay
     tokenDayData = new TokenDayData(tokenDayID)
     tokenDayData.date = dayStartTimestamp
     tokenDayData.token = token.id
-    tokenDayData.priceUSD = token.derivedETH.times(bundle.ethPrice)
+    tokenDayData.priceUSD = token.derivedAVAX.times(bundle.avaxPrice)
     tokenDayData.dailyVolumeToken = ZERO_BD
-    tokenDayData.dailyVolumeETH = ZERO_BD
+    tokenDayData.dailyVolumeAVAX = ZERO_BD
     tokenDayData.dailyVolumeUSD = ZERO_BD
     tokenDayData.dailyTxns = ZERO_BI
     tokenDayData.totalLiquidityUSD = ZERO_BD
   }
-  tokenDayData.priceUSD = token.derivedETH.times(bundle.ethPrice)
+  tokenDayData.priceUSD = token.derivedAVAX.times(bundle.avaxPrice)
   tokenDayData.totalLiquidityToken = token.totalLiquidity
-  tokenDayData.totalLiquidityETH = token.totalLiquidity.times(token.derivedETH as BigDecimal)
-  tokenDayData.totalLiquidityUSD = tokenDayData.totalLiquidityETH.times(bundle.ethPrice)
+  tokenDayData.totalLiquidityAVAX = token.totalLiquidity.times(token.derivedAVAX as BigDecimal)
+  tokenDayData.totalLiquidityUSD = tokenDayData.totalLiquidityAVAX.times(bundle.avaxPrice)
   tokenDayData.dailyTxns = tokenDayData.dailyTxns.plus(ONE_BI)
   tokenDayData.save()
 
