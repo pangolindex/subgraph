@@ -47,6 +47,25 @@ let MINING_POOLS: string[] = [
   "0x6955cb85edea63f861c0be39c3d7f8921606c4dc", // png-sushi
   "0xb921a3ae9ceda66fa8a74dbb0946367fb14fae34", // png-aave
   "0x2061298c76cd76219b9b44439e96a75f19c61f7f", // png-yfi
+  '0x417c02150b9a31bcacb201d1d60967653384e1c6', // v2
+  '0x94c021845efe237163831dac39448cfd371279d6', // v2
+  '0xe968e9753fd2c323c2fe94caff954a48afc18546', // v2
+  '0x574d3245e36cf8c9dc86430eadb0fdb2f385f829', // v2
+  '0xbda623cdd04d822616a263bf4edbbce0b7dc4ae7', // v2
+  '0x701e03fad691799a8905043c0d18d2213bbcf2c7', // v2
+  '0x1f6acc5f5fe6af91c1bb3bebd27f4807a243d935', // v2
+  '0xda354352b03f87f84315eef20cdd83c49f7e812e', // v2
+  '0x4df32f1f8469648e89e62789f4246f73fe768b8e', // v2
+  '0x2c31822f35506c6444f458ed7470c79f9924ee86', // v2
+  '0x7ac007afb5d61f48d1e3c8cc130d4cf6b765000e', // v2
+  '0xe2510a1fcccde8d2d1c40b41e8f71fb1f47e5bba', // v2
+  '0x681047473b6145ba5db90b074e32861549e85cc7', // v2
+  '0x6356b24b36074abe2903f44fe4019bc5864fde36', // v2
+  '0xe3103e565cf96a5709ae8e603b1efb7fed04613b', // v2
+  '0x4f74bbf6859a994e7c309ea0f11e3cc112955110', // v2
+  '0x633f4b4db7dd4fa066bd9949ab627a551e0ecd32', // v2
+  '0xfd9acec0f413ca05d5ad5b962f3b4de40018ad87', // v2
+  '0xc7d0e29b616b29ac6ff4fd5f37c8da826d16db0d', // v2
 ]
 
 function isCompleteMint(mintId: string): boolean {
