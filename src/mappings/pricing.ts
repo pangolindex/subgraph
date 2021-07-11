@@ -41,11 +41,11 @@ let WHITELIST: string[] = [
   '0x39cf1bd5f15fb22ec3d9ff86b0727afc203427cc', // sushi
   '0xba7deebbfc5fa1100fb055a87773e1e99cd3507a', // dai
   '0x99519acb025a0e0d44c3875a4bbf03af65933627', // yfi
-  // '0xe896cdeaac9615145c0ca09c8cd5c25bced6384c', // pefi
-  // '0xd1c3f94de7e5b45fa4edbba472491a9f4b166fc4', // xava
-  // '0xc38f41a296a4493ff429f1238e030924a1542e50', // snob
-  // '0x846d50248baf8b7ceaa9d9b53bfd12d7d7fbb25a', // vso
-  // '0x6e7f5c0b9f4432716bdd0a77a3601291b9d9e985', // spore
+  '0xe896cdeaac9615145c0ca09c8cd5c25bced6384c', // pefi
+  '0xd1c3f94de7e5b45fa4edbba472491a9f4b166fc4', // xava
+  '0xc38f41a296a4493ff429f1238e030924a1542e50', // snob
+  '0x846d50248baf8b7ceaa9d9b53bfd12d7d7fbb25a', // vso
+  '0x6e7f5c0b9f4432716bdd0a77a3601291b9d9e985', // spore
 ]
 
 // minimum liquidity required to count towards tracked volume for pairs with small # of Lps
