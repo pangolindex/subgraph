@@ -28,51 +28,69 @@ import {
 } from './helpers'
 
 let MINING_POOLS: string[] = [
-  "0xa16381eae6285123c323a665d4d99a6bcfaac307", // v1 avax-eth
-  "0x4f019452f51bba0250ec8b69d64282b79fc8bd9f", // v1 avax-usdt
-  "0x01897e996eefff65ae9999c02d1d8d7e9e0c0352", // v1 avax-wbtc
-  "0x8fd2755c6ae7252753361991bdcd6ff55bdc01ce", // v1 avax-png
-  "0x7d7ecd4d370384b17dfc1b4155a8410e97841b65", // v1 avax-link
-  "0xb5b9ded9c193731f816ae1f8ffb7f8b0fae40c88", // v1 avax-dai
-  "0xe4d9ae03859dac6d65432d557f75b9b588a38ee1", // v1 avax-uni
-  "0x88f26b81c9cae4ea168e31bc6353f493fda29661", // v1 avax-sushi
-  "0xee0023108918884181e48902f7c797573f413ece", // v1 avax-aave
-  "0x797cbcf107519f4b279fc5db372e292cdf7e6956", // v1 avax-yfi
-  "0x4e550fefbf888cb43ead73d821f646f43b1f2309", // v1 png-eth
-  "0x7accc6f16bf8c0dce22371fbd914c6b5b402bf9f", // v1 png-usdt
-  "0x99b06b9673fea30ba55179b1433ce909fdc28723", // v1 png-wbtc
-  "0x4ad6e309805cb477010bea9ffc650cb27c1a9504", // v1 png-link
-  "0x8866077f08b076360c25f4fd7fbc959ef135474c", // v1 png-dai
-  "0x41188b4332fe68135d1524e43db98e81519d263b", // v1 png-uni
-  "0x6955cb85edea63f861c0be39c3d7f8921606c4dc", // v1 png-sushi
-  "0xb921a3ae9ceda66fa8a74dbb0946367fb14fae34", // v1 png-aave
-  "0x2061298c76cd76219b9b44439e96a75f19c61f7f", // v1 png-yfi
+  "0xa16381eae6285123c323a665d4d99a6bcfaac307", // v1 WAVAX-ETH (aeb)
+  "0x4f019452f51bba0250ec8b69d64282b79fc8bd9f", // v1 WAVAX-USDT (aeb)
+  "0x01897e996eefff65ae9999c02d1d8d7e9e0c0352", // v1 WAVAX-WBTC (aeb)
+  "0x8fd2755c6ae7252753361991bdcd6ff55bdc01ce", // v1 AVAX-PNG
+  "0x7d7ecd4d370384b17dfc1b4155a8410e97841b65", // v1 WAVAX-LINK (aeb)
+  "0xb5b9ded9c193731f816ae1f8ffb7f8b0fae40c88", // v1 WAVAX-DAI (aeb)
+  "0xe4d9ae03859dac6d65432d557f75b9b588a38ee1", // v1 WAVAX-UNI (aeb)
+  "0x88f26b81c9cae4ea168e31bc6353f493fda29661", // v1 WAVAX-SUSHI (aeb)
+  "0xee0023108918884181e48902f7c797573f413ece", // v1 WAVAX-AAVE (aeb)
+  "0x797cbcf107519f4b279fc5db372e292cdf7e6956", // v1 WAVAX-YFI (aeb)
+  "0x4e550fefbf888cb43ead73d821f646f43b1f2309", // v1 PNG-ETH (aeb)
+  "0x7accc6f16bf8c0dce22371fbd914c6b5b402bf9f", // v1 PNG-USDT (aeb)
+  "0x99b06b9673fea30ba55179b1433ce909fdc28723", // v1 PNG-WBTC (aeb)
+  "0x4ad6e309805cb477010bea9ffc650cb27c1a9504", // v1 PNG-LINK (aeb)
+  "0x8866077f08b076360c25f4fd7fbc959ef135474c", // v1 PNG-DAI (aeb)
+  "0x41188b4332fe68135d1524e43db98e81519d263b", // v1 PNG-UNI (aeb)
+  "0x6955cb85edea63f861c0be39c3d7f8921606c4dc", // v1 PNG-SUSHI (aeb)
+  "0xb921a3ae9ceda66fa8a74dbb0946367fb14fae34", // v1 PNG-AAVE (aeb)
+  "0x2061298c76cd76219b9b44439e96a75f19c61f7f", // v1 PNG-YFI (aeb)
 
-  '0x417c02150b9a31bcacb201d1d60967653384e1c6', // v2 avax-eth
-  '0x94c021845efe237163831dac39448cfd371279d6', // v2 avax-usdt
-  '0xe968e9753fd2c323c2fe94caff954a48afc18546', // v2 avax-wbtc
-  '0x574d3245e36cf8c9dc86430eadb0fdb2f385f829', // v2 avax-png
-  '0xbda623cdd04d822616a263bf4edbbce0b7dc4ae7', // v2 avax-link
-  '0x701e03fad691799a8905043c0d18d2213bbcf2c7', // v2 avax-dai
-  '0x1f6acc5f5fe6af91c1bb3bebd27f4807a243d935', // v2 avax-uni
-  '0xda354352b03f87f84315eef20cdd83c49f7e812e', // v2 avax-sushi
-  '0x4df32f1f8469648e89e62789f4246f73fe768b8e', // v2 avax-aave
-  '0x2c31822f35506c6444f458ed7470c79f9924ee86', // v2 avax-yfi
-  '0x640d754113a3cbdd80bccc1b5c0387148eebf2fe', // v2 avax-snob
-  '0xf2b788085592380bfcac40ac5e0d10d9d0b54eee', // v2 avax-vso
-  '0xd3e5538a049fcfcb8df559b85b352302fefb8d7c', // v2 avax-spore
-  '0x7ac007afb5d61f48d1e3c8cc130d4cf6b765000e', // v2 png-eth
-  '0xe2510a1fcccde8d2d1c40b41e8f71fb1f47e5bba', // v2 png-usdt
-  '0x681047473b6145ba5db90b074e32861549e85cc7', // v2 png-wbtc
-  '0x6356b24b36074abe2903f44fe4019bc5864fde36', // v2 png-link
-  '0xe3103e565cf96a5709ae8e603b1efb7fed04613b', // v2 png-dai
-  '0x4f74bbf6859a994e7c309ea0f11e3cc112955110', // v2 png-uni
-  '0x633f4b4db7dd4fa066bd9949ab627a551e0ecd32', // v2 png-sushi
-  '0xfd9acec0f413ca05d5ad5b962f3b4de40018ad87', // v2 png-aave
-  '0xc7d0e29b616b29ac6ff4fd5f37c8da826d16db0d', // v2 png-yfi
-  '0x08b9a023e34bad6db868b699fa642bf5f12ebe76', // v2 png-snob
-  '0x759ee0072901f409e4959e00b00a16fd729397ec', // v2 png-vso
-  '0x12a33f6b0dd0d35279d402ab61587fe7eb23f7b0', // v2 png-spore
+  '0x417c02150b9a31bcacb201d1d60967653384e1c6', // v2 WAVAX-ETH (aeb)
+  '0x________________________________________', // v2 WAVAX-xETH
+  '0x94c021845efe237163831dac39448cfd371279d6', // v2 WAVAX-USDT (aeb)
+  '0x________________________________________', // v2 WAVAX-xUSDT
+  '0xe968e9753fd2c323c2fe94caff954a48afc18546', // v2 WAVAX-WBTC (aeb)
+  '0x________________________________________', // v2 WAVAX-xBTC
+  '0x574d3245e36cf8c9dc86430eadb0fdb2f385f829', // v2 AVAX-PNG
+  '0xbda623cdd04d822616a263bf4edbbce0b7dc4ae7', // v2 WAVAX-LINK (aeb)
+  '0x________________________________________', // v2 WAVAX-xLINK
+  '0x701e03fad691799a8905043c0d18d2213bbcf2c7', // v2 WAVAX-DAI (aeb)
+  '0x________________________________________', // v2 WAVAX-xDAI
+  '0x1f6acc5f5fe6af91c1bb3bebd27f4807a243d935', // v2 WAVAX-UNI (aeb)
+  '0x________________________________________', // v2 WAVAX-xUNI
+  '0xda354352b03f87f84315eef20cdd83c49f7e812e', // v2 WAVAX-SUSHI (aeb)
+  '0x________________________________________', // v2 WAVAX-xSUSHI
+  '0x4df32f1f8469648e89e62789f4246f73fe768b8e', // v2 WAVAX-AAVE (aeb)
+  '0x________________________________________', // v2 WAVAX-xAAVE
+  '0x2c31822f35506c6444f458ed7470c79f9924ee86', // v2 WAVAX-YFI (aeb)
+  '0x________________________________________', // v2 WAVAX-xYFI
+  '0x640d754113a3cbdd80bccc1b5c0387148eebf2fe', // v2 AVAX-SNOB
+  '0xf2b788085592380bfcac40ac5e0d10d9d0b54eee', // v2 AVAX-VSO
+  '0xd3e5538a049fcfcb8df559b85b352302fefb8d7c', // v2 AVAX-SPORE
+  '0x7ac007afb5d61f48d1e3c8cc130d4cf6b765000e', // v2 PNG-ETH (aeb)
+  '0x________________________________________', // v2 WAVAX-xETH
+  '0xe2510a1fcccde8d2d1c40b41e8f71fb1f47e5bba', // v2 PNG-USDT (aeb)
+  '0x________________________________________', // v2 WAVAX-xUSDT
+  '0x681047473b6145ba5db90b074e32861549e85cc7', // v2 PNG-WBTC (aeb)
+  '0x________________________________________', // v2 WAVAX-xBTC
+  '0x6356b24b36074abe2903f44fe4019bc5864fde36', // v2 PNG-LINK (aeb)
+  '0x________________________________________', // v2 WAVAX-xLINK
+  '0xe3103e565cf96a5709ae8e603b1efb7fed04613b', // v2 PNG-DAI (aeb)
+  '0x________________________________________', // v2 WAVAX-xDAI
+  '0x4f74bbf6859a994e7c309ea0f11e3cc112955110', // v2 PNG-UNI (aeb)
+  '0x________________________________________', // v2 WAVAX-xUNI
+  '0x633f4b4db7dd4fa066bd9949ab627a551e0ecd32', // v2 PNG-SUSHI (aeb)
+  '0x________________________________________', // v2 WAVAX-xSUSHI
+  '0xfd9acec0f413ca05d5ad5b962f3b4de40018ad87', // v2 PNG-AAVE (aeb)
+  '0x________________________________________', // v2 WAVAX-xAAVE
+  '0xc7d0e29b616b29ac6ff4fd5f37c8da826d16db0d', // v2 PNG-YFI (aeb)
+  '0x________________________________________', // v2 WAVAX-xYFI
+  '0x08b9a023e34bad6db868b699fa642bf5f12ebe76', // v2 PNG-SNOB
+  '0x759ee0072901f409e4959e00b00a16fd729397ec', // v2 PNG-VSO
+  '0x12a33f6b0dd0d35279d402ab61587fe7eb23f7b0', // v2 PNG-SPORE
 ]
 
 function isCompleteMint(mintId: string): boolean {
