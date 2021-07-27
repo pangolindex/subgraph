@@ -6,42 +6,42 @@ import { ZERO_BD, factoryContract, ADDRESS_ZERO, ONE_BD } from './helpers'
 const WAVAX_ADDRESS = '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7'
 const AEB_USDT_WAVAX_PAIR = '0x9ee0a4e21bd333a6bb2ab298194320b8daa26516'  // created block 60,337
 const AEB_DAI_WAVAX_PAIR = '0x17a2e8275792b4616befb02eb9ae699aa0dcb94b'   // created block 60,355
-const XUSDT_WAVAX_PAIR = '' // created block X,XXX,XXX
-const XDAI_WAVAX_PAIR = '' // created block X,XXX,XXX
+const AB_DAI_WAVAX_PAIR = '0xbA09679Ab223C6bdaf44D45Ba2d7279959289AB0' // created block 2,781,964
+const AB_USDT_WAVAX_PAIR = '0xe28984e1EE8D431346D32BeC9Ec800Efb643eef4' // created block 2,781,997
 
 export function getEthPriceInUSD(): BigDecimal {
   // fetch eth prices for each stablecoin
 
   const aebUsdtPair = Pair.load(AEB_USDT_WAVAX_PAIR) // USDT is token1
   const aebDaiPair = Pair.load(AEB_DAI_WAVAX_PAIR) // DAI is token1
-  const xusdtPair = Pair.load(XUSDT_WAVAX_PAIR) // assuming xUSDT is token1
-  const xdaiPair = Pair.load(XDAI_WAVAX_PAIR) // assuming xDAI is token1
+  const abDaiPair = Pair.load(AB_DAI_WAVAX_PAIR) // DAI.e is token1
+  const abUsdtPair = Pair.load(AB_USDT_WAVAX_PAIR) // USDT.e is token1
 
-  if (aebUsdtPair !== null && aebDaiPair !== null && xusdtPair !== null && xdaiPair !== null) {
-    // USDT (aeb), DAI (aeb), xUSDT, and xDAI have been created
+  if (aebUsdtPair !== null && aebDaiPair !== null && abDaiPair !== null && abUsdtPair !== null) {
+    // USDT (aeb), DAI (aeb), DAI.e, and USDT.e have been created
     const totalLiquidityWAVAX = aebUsdtPair.reserve0
         .plus(aebDaiPair.reserve0)
-        .plus(xusdtPair.reserve0)
-        .plus(xdaiPair.reserve0)
+        .plus(abDaiPair.reserve0)
+        .plus(abUsdtPair.reserve0)
     const aebUsdtWeight = aebUsdtPair.reserve0.div(totalLiquidityWAVAX)
     const aebDaiWeight = aebDaiPair.reserve0.div(totalLiquidityWAVAX)
-    const xusdtWeight = xusdtPair.reserve0.div(totalLiquidityWAVAX)
-    const xdaiWeight = xdaiPair.reserve0.div(totalLiquidityWAVAX)
+    const abDaiWeight = abDaiPair.reserve0.div(totalLiquidityWAVAX)
+    const abUsdtWeight = abUsdtPair.reserve0.div(totalLiquidityWAVAX)
     return aebUsdtPair.token1Price.times(aebUsdtWeight)
         .plus(aebDaiPair.token1Price.times(aebDaiWeight))
-        .plus(xusdtPair.token1Price.times(xusdtWeight))
-        .plus(xdaiPair.token1Price.times(xdaiWeight))
-  } else if (aebUsdtPair !== null && aebDaiPair !== null && xusdtPair !== null) {
-    // USDT (aeb), DAI (aeb), and xUSDT have been created
+        .plus(abDaiPair.token1Price.times(abDaiWeight))
+        .plus(abUsdtPair.token1Price.times(abUsdtWeight))
+  } else if (aebUsdtPair !== null && aebDaiPair !== null && abDaiPair !== null) {
+    // USDT (aeb), DAI (aeb), and DAI.e have been created
     const totalLiquidityWAVAX = aebUsdtPair.reserve0
         .plus(aebDaiPair.reserve0)
-        .plus(xusdtPair.reserve0)
+        .plus(abDaiPair.reserve0)
     const aebUsdtWeight = aebUsdtPair.reserve0.div(totalLiquidityWAVAX)
     const aebDaiWeight = aebDaiPair.reserve0.div(totalLiquidityWAVAX)
-    const xusdtWeight = xusdtPair.reserve0.div(totalLiquidityWAVAX)
+    const abDaiWeight = abDaiPair.reserve0.div(totalLiquidityWAVAX)
     return aebUsdtPair.token1Price.times(aebUsdtWeight)
         .plus(aebDaiPair.token1Price.times(aebDaiWeight))
-        .plus(xusdtPair.token1Price.times(xusdtWeight))
+        .plus(abDaiPair.token1Price.times(abDaiWeight))
   } else if (aebUsdtPair !== null && aebDaiPair !== null) {
     // USDT (aeb) and DAI (aeb) have been created
     const totalLiquidityWAVAX = aebUsdtPair.reserve0
@@ -64,23 +64,23 @@ let WHITELIST: string[] = [
   WAVAX_ADDRESS, // WAVAX
   '0x60781c2586d68229fde47564546784ab3faca982', // PNG
   '0xf20d962a6c8f70c731bd838a3a388d7d48fa6e15', // ETH (aeb)
-  '0x________________________________________', // xETH
+  '0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB', // WETH.e
   '0xde3a24028580884448a5397872046a019649b084', // USDT (aeb)
-  '0x________________________________________', // xUSDT
+  '0xc7198437980c041c805A1EDcbA50c1Ce5db95118', // USDT.e
   '0xb3fe5374f67d7a22886a0ee082b2e2f9d2651651', // LINK (aeb)
-  '0x________________________________________', // xLINK
+  '0x5947BB275c521040051D82396192181b413227A3', // LINK.e
   '0x8ce2dee54bb9921a2ae0a63dbb2df8ed88b91dd9', // AAVE (aeb)
-  '0x________________________________________', // xAAVE
+  '0x63a72806098Bd3D9520cC43356dD78afe5D386D9', // AAVE.e
   '0xf39f9671906d8630812f9d9863bbef5d523c84ab', // UNI (aeb)
-  '0x________________________________________', // xUNI
+  '0x8eBAf22B6F053dFFeaf46f4Dd9eFA95D89ba8580', // UNI.e
   '0x408d4cd0adb7cebd1f1a1c33a0ba2098e1295bab', // WBTC (aeb)
-  '0x________________________________________', // xBTC
+  '0x50b7545627a5162F82A992c33b87aDc75187B218', // WBTC.e
   '0x39cf1bd5f15fb22ec3d9ff86b0727afc203427cc', // SUSHI (aeb)
-  '0x________________________________________', // xSUSHI
+  '0x37B608519F91f70F2EeB0e5Ed9AF4061722e4F76', // SUSHI.e
   '0xba7deebbfc5fa1100fb055a87773e1e99cd3507a', // DAI (aeb)
-  '0x________________________________________', // xDAI
+  '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70', // DAI.e
   '0x99519acb025a0e0d44c3875a4bbf03af65933627', // YFI (aeb)
-  '0x________________________________________', // xYFI
+  '0x9eAaC1B23d935365bD7b542Fe22cEEe2922f52dc', // YFI.e
   '0xe896cdeaac9615145c0ca09c8cd5c25bced6384c', // PEFI
   '0xd1c3f94de7e5b45fa4edbba472491a9f4b166fc4', // XAVA
   '0xc38f41a296a4493ff429f1238e030924a1542e50', // SNOB
