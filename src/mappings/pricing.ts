@@ -46,6 +46,7 @@ let WHITELIST: string[] = [
   '0xc38f41a296a4493ff429f1238e030924a1542e50', // snob
   '0x846d50248baf8b7ceaa9d9b53bfd12d7d7fbb25a', // vso
   '0x6e7f5c0b9f4432716bdd0a77a3601291b9d9e985', // spore
+  '0xd1c3f94DE7e5B45fa4eDBBA472491a9f4B166FC4', // xava
 ]
 
 // minimum liquidity required to count towards tracked volume for pairs with small # of Lps
