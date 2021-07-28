@@ -61,6 +61,8 @@ let MINING_POOLS: string[] = [
   '0x640d754113a3cbdd80bccc1b5c0387148eebf2fe', // v2 avax-snob
   '0xf2b788085592380bfcac40ac5e0d10d9d0b54eee', // v2 avax-vso
   '0xd3e5538a049fcfcb8df559b85b352302fefb8d7c', // v2 avax-spore
+  '0x4E258f7ec60234bb6f3Ea7eCFf5931901182Bd6E', // v2 avax-bifi
+  '0x21CCa1672E95996413046077B8cf1E52F080A165', // v2 avax-bnb
   '0x4219330Af5368378D5ffd869a55f5F2a26aB898c', // v2 avax-xava
   '0x7ac007afb5d61f48d1e3c8cc130d4cf6b765000e', // v2 png-eth
   '0xe2510a1fcccde8d2d1c40b41e8f71fb1f47e5bba', // v2 png-usdt
@@ -74,6 +76,8 @@ let MINING_POOLS: string[] = [
   '0x08b9a023e34bad6db868b699fa642bf5f12ebe76', // v2 png-snob
   '0x759ee0072901f409e4959e00b00a16fd729397ec', // v2 png-vso
   '0x12a33f6b0dd0d35279d402ab61587fe7eb23f7b0', // v2 png-spore
+  '0x518B07E2d9e08A8c2e3cB7704336520827a4d399', // v2 png-bifi
+  '0x68a90C38bF4f90AC2a870d6FcA5b0A5A218763AD', // v2 png-bnb
   '0x5b3Ed7f47D1d4FA22b559D043a09d78bc55A94E9', // v2 png-xava
 ]
 
