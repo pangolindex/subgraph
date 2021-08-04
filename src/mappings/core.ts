@@ -109,9 +109,9 @@ function isCompleteMint(mintId: string): boolean {
 }
 
 export function handleTransfer(event: Transfer): void {
-  const eventToAsHexString = event.params.to.toHexString()
-  const eventFromAsHexString = event.params.from.toHexString()
-  const eventHashAsHexString = event.transaction.hash.toHexString()
+  let eventToAsHexString = event.params.to.toHexString()
+  let eventFromAsHexString = event.params.from.toHexString()
+  let eventHashAsHexString = event.transaction.hash.toHexString()
 
   // ignore initial transfers for first adds
   if (eventToAsHexString == ADDRESS_ZERO && event.params.value.equals(BigInt.fromI32(1000))) {

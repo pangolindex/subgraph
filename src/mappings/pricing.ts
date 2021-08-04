@@ -12,42 +12,42 @@ const AB_USDT_WAVAX_PAIR = '0xe28984e1EE8D431346D32BeC9Ec800Efb643eef4' // creat
 export function getEthPriceInUSD(): BigDecimal {
   // fetch eth prices for each stablecoin
 
-  const aebUsdtPair = Pair.load(AEB_USDT_WAVAX_PAIR) // USDT is token1
-  const aebDaiPair = Pair.load(AEB_DAI_WAVAX_PAIR) // DAI is token1
-  const abDaiPair = Pair.load(AB_DAI_WAVAX_PAIR) // DAI.e is token1
-  const abUsdtPair = Pair.load(AB_USDT_WAVAX_PAIR) // USDT.e is token1
+  let aebUsdtPair = Pair.load(AEB_USDT_WAVAX_PAIR) // USDT is token1
+  let aebDaiPair = Pair.load(AEB_DAI_WAVAX_PAIR) // DAI is token1
+  let abDaiPair = Pair.load(AB_DAI_WAVAX_PAIR) // DAI.e is token1
+  let abUsdtPair = Pair.load(AB_USDT_WAVAX_PAIR) // USDT.e is token1
 
   if (aebUsdtPair !== null && aebDaiPair !== null && abDaiPair !== null && abUsdtPair !== null) {
     // USDT (aeb), DAI (aeb), DAI.e, and USDT.e have been created
-    const totalLiquidityWAVAX = aebUsdtPair.reserve0
+    let totalLiquidityWAVAX = aebUsdtPair.reserve0
         .plus(aebDaiPair.reserve0)
         .plus(abDaiPair.reserve0)
         .plus(abUsdtPair.reserve0)
-    const aebUsdtWeight = aebUsdtPair.reserve0.div(totalLiquidityWAVAX)
-    const aebDaiWeight = aebDaiPair.reserve0.div(totalLiquidityWAVAX)
-    const abDaiWeight = abDaiPair.reserve0.div(totalLiquidityWAVAX)
-    const abUsdtWeight = abUsdtPair.reserve0.div(totalLiquidityWAVAX)
+    let aebUsdtWeight = aebUsdtPair.reserve0.div(totalLiquidityWAVAX)
+    let aebDaiWeight = aebDaiPair.reserve0.div(totalLiquidityWAVAX)
+    let abDaiWeight = abDaiPair.reserve0.div(totalLiquidityWAVAX)
+    let abUsdtWeight = abUsdtPair.reserve0.div(totalLiquidityWAVAX)
     return aebUsdtPair.token1Price.times(aebUsdtWeight)
         .plus(aebDaiPair.token1Price.times(aebDaiWeight))
         .plus(abDaiPair.token1Price.times(abDaiWeight))
         .plus(abUsdtPair.token1Price.times(abUsdtWeight))
   } else if (aebUsdtPair !== null && aebDaiPair !== null && abDaiPair !== null) {
     // USDT (aeb), DAI (aeb), and DAI.e have been created
-    const totalLiquidityWAVAX = aebUsdtPair.reserve0
+    let totalLiquidityWAVAX = aebUsdtPair.reserve0
         .plus(aebDaiPair.reserve0)
         .plus(abDaiPair.reserve0)
-    const aebUsdtWeight = aebUsdtPair.reserve0.div(totalLiquidityWAVAX)
-    const aebDaiWeight = aebDaiPair.reserve0.div(totalLiquidityWAVAX)
-    const abDaiWeight = abDaiPair.reserve0.div(totalLiquidityWAVAX)
+    let aebUsdtWeight = aebUsdtPair.reserve0.div(totalLiquidityWAVAX)
+    let aebDaiWeight = aebDaiPair.reserve0.div(totalLiquidityWAVAX)
+    let abDaiWeight = abDaiPair.reserve0.div(totalLiquidityWAVAX)
     return aebUsdtPair.token1Price.times(aebUsdtWeight)
         .plus(aebDaiPair.token1Price.times(aebDaiWeight))
         .plus(abDaiPair.token1Price.times(abDaiWeight))
   } else if (aebUsdtPair !== null && aebDaiPair !== null) {
     // USDT (aeb) and DAI (aeb) have been created
-    const totalLiquidityWAVAX = aebUsdtPair.reserve0
+    let totalLiquidityWAVAX = aebUsdtPair.reserve0
         .plus(aebDaiPair.reserve0)
-    const aebUsdtWeight = aebUsdtPair.reserve0.div(totalLiquidityWAVAX)
-    const aebDaiWeight = aebDaiPair.reserve0.div(totalLiquidityWAVAX)
+    let aebUsdtWeight = aebUsdtPair.reserve0.div(totalLiquidityWAVAX)
+    let aebDaiWeight = aebDaiPair.reserve0.div(totalLiquidityWAVAX)
     return aebUsdtPair.token1Price.times(aebUsdtWeight)
         .plus(aebDaiPair.token1Price.times(aebDaiWeight))
   } else if (aebUsdtPair !== null) {
