@@ -48,24 +48,24 @@ let MINING_POOLS: string[] = [
   "0x2061298C76cD76219b9b44439e96A75F19C61f7f", // v1 PNG-YFI (aeb)
 
   '0x417C02150b9a31BcaCb201d1D60967653384E1C6', // v2 WAVAX-ETH (aeb)
-  // '0x________________________________________', // v2 WAVAX-WETH.e
+  '0x830A966B9B447c9B15aB24c0369c4018E75F31C9', // v2 WAVAX-WETH.e
   '0x94C021845EfE237163831DAC39448cFD371279d6', // v2 WAVAX-USDT (aeb)
-  // '0x________________________________________', // v2 WAVAX-USDT.e
+  '0x006cC053bdb84C2d6380B3C4a573d84636378A47', // v2 WAVAX-USDT.e
   '0xe968E9753fd2c323C2Fe94caFF954a48aFc18546', // v2 WAVAX-WBTC (aeb)
-  // '0x________________________________________', // v2 WAVAX-WBTC.e
+  '0x30CbF11f6fcc9FC1bF6E55A6941b1A47A56eAEC5', // v2 WAVAX-WBTC.e
   '0x574d3245e36Cf8C9dc86430EaDb0fDB2F385F829', // v2 WAVAX-PNG
   '0xBDa623cDD04d822616A263BF4EdbBCe0B7DC4AE7', // v2 WAVAX-LINK (aeb)
-  // '0x________________________________________', // v2 WAVAX-LINK.e
+  '0x2e10D9d08f76807eFdB6903025DE8e006b1185F5', // v2 WAVAX-LINK.e
   '0x701e03fAD691799a8905043C0d18d2213BbCf2c7', // v2 WAVAX-DAI (aeb)
-  // '0x________________________________________', // v2 WAVAX-DAI.e
+  '0x63A84F66b8c90841Cb930F2dC3D28799F0c6657B', // v2 WAVAX-DAI.e
   '0x1F6aCc5F5fE6Af91C1BB3bEbd27f4807a243D935', // v2 WAVAX-UNI (aeb)
-  // '0x________________________________________', // v2 WAVAX-UNI.e
+  '0x6E36A71c1A211f01Ff848C1319D4e34BB5483224', // v2 WAVAX-UNI.e
   '0xDA354352b03f87F84315eEF20cdD83c49f7E812e', // v2 WAVAX-SUSHI (aeb)
-  // '0x________________________________________', // v2 WAVAX-SUSHI.e
+  '0x2D55341f2abbb5472020e2d556a4f6B951C8Fa22', // v2 WAVAX-SUSHI.e
   '0x4dF32F1F8469648e89E62789F4246f73fe768b8E', // v2 WAVAX-AAVE (aeb)
-  // '0x________________________________________', // v2 WAVAX-AAVE.e
+  '0xa04fCcE7955312709c838982ad0E297375002C32', // v2 WAVAX-AAVE.e
   '0x2C31822F35506C6444F458Ed7470c79f9924Ee86', // v2 WAVAX-YFI (aeb)
-  // '0x________________________________________', // v2 WAVAX-YFI.e
+  '0x642c5B7AC22f56A0eF87930a89f0980FcA904B03', // v2 WAVAX-YFI.e
   '0x640D754113A3CBDd80BcCc1b5c0387148EEbf2fE', // v2 WAVAX-SNOB
   '0xf2b788085592380bfCAc40Ac5E0d10D9d0b54eEe', // v2 WAVAX-VSO
   '0xd3e5538A049FcFcb8dF559B85B352302fEfB8d7C', // v2 WAVAX-SPORE
@@ -76,23 +76,23 @@ let MINING_POOLS: string[] = [
   '0x079a479e270E72A1899239570912358C6BC22d94', // v2 WAVAX-TRYB
   '0x99918c92655D6f8537588210cD3Ddd52312CB36d', // v2 WAVAX-SHERPA
   '0x7ac007afb5d61f48d1e3c8cc130d4cf6b765000e', // v2 PNG-ETH (aeb)
-  // '0x________________________________________', // v2 PNG-WETH.e
+  '0x03a9091620CACeE4968c915232B175C16a584733', // v2 PNG-WETH.e
   '0xe2510a1fcccde8d2d1c40b41e8f71fb1f47e5bba', // v2 PNG-USDT (aeb)
-  // '0x________________________________________', // v2 PNG-USDT.e
+  '0x7216d1e173c1f1Ed990239d5c77d74714a837Cd5', // v2 PNG-USDT.e
   '0x681047473b6145ba5db90b074e32861549e85cc7', // v2 PNG-WBTC (aeb)
-  // '0x________________________________________', // v2 PNG-WBTC.e
+  '0xEeEA1e815f12d344b5035a33da4bc383365F5Fee', // v2 PNG-WBTC.e
   '0x6356b24b36074abe2903f44fe4019bc5864fde36', // v2 PNG-LINK (aeb)
-  // '0x________________________________________', // v2 PNG-LINK.e
+  '0x4B283e4211B3fAa525846d21869925e78f93f189', // v2 PNG-LINK.e
   '0xe3103e565cf96a5709ae8e603b1efb7fed04613b', // v2 PNG-DAI (aeb)
-  // '0x________________________________________', // v2 PNG-DAI.e
+  '0xF344611DD94099708e508C2Deb16628578940d77', // v2 PNG-DAI.e
   '0x4f74bbf6859a994e7c309ea0f11e3cc112955110', // v2 PNG-UNI (aeb)
-  // '0x________________________________________', // v2 PNG-UNI.e
+  '0xD4E49A8Ec23daB51ACa459D233e9447DE03AFd29', // v2 PNG-UNI.e
   '0x633f4b4db7dd4fa066bd9949ab627a551e0ecd32', // v2 PNG-SUSHI (aeb)
-  // '0x________________________________________', // v2 PNG-SUSHI.e
+  '0x923E69322Bea5e22799a29Dcfc9c616F3B5cF95b', // v2 PNG-SUSHI.e
   '0xfd9acec0f413ca05d5ad5b962f3b4de40018ad87', // v2 PNG-AAVE (aeb)
-  // '0x________________________________________', // v2 PNG-AAVE.e
+  '0x3F91756D773A1455A7a1A70f5d9239F1B1d1f095', // v2 PNG-AAVE.e
   '0xc7d0e29b616b29ac6ff4fd5f37c8da826d16db0d', // v2 PNG-YFI (aeb)
-  // '0x________________________________________', // v2 PNG-YFI.e
+  '0x269Ed6B2040f965D9600D0859F36951cB9F01460', // v2 PNG-YFI.e
   '0x08B9A023e34Bad6Db868B699fa642Bf5f12Ebe76', // v2 PNG-SNOB
   '0x759ee0072901f409e4959E00b00a16FD729397eC', // v2 PNG-VSO
   '0x12A33F6B0dd0D35279D402aB61587fE7eB23f7b0', // v2 PNG-SPORE
