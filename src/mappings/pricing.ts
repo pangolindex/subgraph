@@ -91,6 +91,9 @@ let WHITELIST: string[] = [
   '0x564a341df6c126f90cf3ecb92120fd7190acb401', // TRYB
   '0xa5e59761ebd4436fa4d20e1a27cba29fb2471fc6', // SHERPA
   '0x59414b3089ce2af0010e7523dea7e2b35d776ec7', // YAK
+  '0x8729438eb15e2c8b576fcc6aecda6a148776c0f5', // QI
+  '0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17', // DYP
+  '0x9e037de681cafa6e661e6108ed9c2bd1aa567ecd', // WALBT
 ]
 
 // minimum liquidity required to count towards tracked volume for pairs with small # of Lps

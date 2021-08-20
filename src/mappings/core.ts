@@ -76,6 +76,9 @@ let MINING_POOLS: string[] = [
   '0x079a479e270e72a1899239570912358c6bc22d94', // v2 WAVAX-TRYB
   '0x99918c92655d6f8537588210cd3ddd52312cb36d', // v2 WAVAX-SHERPA
   '0xb600429ccd364f1727f91fc0e75d67d65d0ee4c5', // v2 WAVAX-YAK
+  '0x29a7f3d1f27637eda531dc69d989c86ab95225d8', // v2 WAVAX-DYP
+  '0xed472431e02ea9ef8cc99b9812c335ac0873bba2', // v2 WAVAX-QI
+  '0xa296f9474e77ae21f90afb50713f44cc6916fbb2', // v2 WAVAX-WALBT
   '0x7ac007afb5d61f48d1e3c8cc130d4cf6b765000e', // v2 PNG-ETH (aeb)
   '0x03a9091620cacee4968c915232b175c16a584733', // v2 PNG-WETH.e
   '0xe2510a1fcccde8d2d1c40b41e8f71fb1f47e5bba', // v2 PNG-USDT (aeb)
@@ -104,6 +107,9 @@ let MINING_POOLS: string[] = [
   '0x0a9773aebc1429d860a492d70c8ea335faa9f19f', // v2 PNG-TRYB
   '0x80e919784e7c5ad3dd59cafcdc0e9c079b65f262', // v2 PNG-SHERPA
   '0x42ff9473a5aea00de39355e0288c7a151eb00b6e', // v2 PNG-YAK
+  '0x3a0ef6a586d9c15de30edf5d34ae00e26b0125ce', // v2 PNG-DYP
+  '0x2bd42c357a3e13f18849c67e8dc108cc8462ae33', // v2 PNG-QI
+  '0x393fe4bc29afbb3786d99f043933c49097449fa1', // v2 PNG-WALBT
 ]
 
 function isCompleteMint(mintId: string): boolean {
