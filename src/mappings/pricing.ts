@@ -45,13 +45,13 @@ export function getEthPriceInUSD(blockNumber: BigInt): BigDecimal {
 
   if (abDaiPair !== null) {
     price = price.plus(
-      abUsdtPair.token1Price.times(abDaiPair.reserve0.div(totalLiquidityWAVAX))
+      abDaiPair.token1Price.times(abDaiPair.reserve0.div(totalLiquidityWAVAX))
     )
   }
 
   if (abUsdtPair !== null) {
     price = price.plus(
-      abDaiPair.token1Price.times(abUsdtPair.reserve0.div(totalLiquidityWAVAX))
+      abUsdtPair.token1Price.times(abUsdtPair.reserve0.div(totalLiquidityWAVAX))
     )
   }
 
