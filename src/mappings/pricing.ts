@@ -9,10 +9,10 @@ const AEB_DAI_WAVAX_PAIR = '0x17a2e8275792b4616befb02eb9ae699aa0dcb94b' // creat
 const AB_DAI_WAVAX_PAIR = '0xba09679ab223c6bdaf44d45ba2d7279959289ab0' // created block 2,781,964
 const AB_USDT_WAVAX_PAIR = '0xe28984e1ee8d431346d32bec9ec800efb643eef4' // created block 2,781,997
 
-const AVERAGE_AVAX_PRICE_PRE_STABLES = BigDecimal.fromString('30')
-const AB_MIGRATION_CUTOVER_BLOCK = BigInt.fromI32(3117207) // August 20 2021 9:00am EST
+let AVERAGE_AVAX_PRICE_PRE_STABLES = BigDecimal.fromString('30')
+let AB_MIGRATION_CUTOVER_BLOCK = BigInt.fromI32(3117207) // August 20 2021 9:00am EST
 
-export function getEthPriceInUSD(blockNumber: BigInt): BigDecimal {
+export function getAVAXPriceInUSD(blockNumber: BigInt): BigDecimal {
   // fetch AVAX prices from each stablecoin
 
   let aebUsdtPair = Pair.load(AEB_USDT_WAVAX_PAIR) // USDT is token1
@@ -20,42 +20,46 @@ export function getEthPriceInUSD(blockNumber: BigInt): BigDecimal {
   let abDaiPair = Pair.load(AB_DAI_WAVAX_PAIR) // DAI.e is token1
   let abUsdtPair = Pair.load(AB_USDT_WAVAX_PAIR) // USDT.e is token1
 
+  let includeAebUsdtPair = aebUsdtPair !== null && blockNumber.lt(AB_MIGRATION_CUTOVER_BLOCK)
+  let includeAebDaiPair = aebDaiPair !== null && blockNumber.lt(AB_MIGRATION_CUTOVER_BLOCK)
+  let includeAbDaiPair = abDaiPair !== null
+  let includeAbUsdtPair = abUsdtPair !== null
+
   let totalLiquidityWAVAX = ZERO_BD
-
-  if (aebUsdtPair !== null) totalLiquidityWAVAX = totalLiquidityWAVAX.plus(aebUsdtPair.reserve0)
-  if (aebDaiPair !== null) totalLiquidityWAVAX = totalLiquidityWAVAX.plus(aebDaiPair.reserve0)
-  if (abUsdtPair !== null) totalLiquidityWAVAX = totalLiquidityWAVAX.plus(abUsdtPair.reserve0)
-  if (abDaiPair !== null) totalLiquidityWAVAX = totalLiquidityWAVAX.plus(abDaiPair.reserve0)
-
-  if (totalLiquidityWAVAX.equals(ZERO_BD)) return AVERAGE_AVAX_PRICE_PRE_STABLES
 
   let price = ZERO_BD
 
-  if (aebUsdtPair !== null && blockNumber.lt(AB_MIGRATION_CUTOVER_BLOCK)) {
+  if (includeAebUsdtPair) {
+    totalLiquidityWAVAX = totalLiquidityWAVAX.plus(aebUsdtPair.reserve0)
     price = price.plus(
-      aebUsdtPair.token1Price.times(aebUsdtPair.reserve0.div(totalLiquidityWAVAX))
+      aebUsdtPair.token1Price.times(aebUsdtPair.reserve0)
     )
   }
 
-  if (aebDaiPair !== null && blockNumber.lt(AB_MIGRATION_CUTOVER_BLOCK)) {
+  if (includeAebDaiPair) {
+    totalLiquidityWAVAX = totalLiquidityWAVAX.plus(aebDaiPair.reserve0)
     price = price.plus(
-      aebDaiPair.token1Price.times(aebDaiPair.reserve0.div(totalLiquidityWAVAX))
+      aebDaiPair.token1Price.times(aebDaiPair.reserve0)
     )
   }
 
-  if (abDaiPair !== null) {
+  if (includeAbDaiPair) {
+    totalLiquidityWAVAX = totalLiquidityWAVAX.plus(abDaiPair.reserve0)
     price = price.plus(
-      abDaiPair.token1Price.times(abDaiPair.reserve0.div(totalLiquidityWAVAX))
+      abDaiPair.token1Price.times(abDaiPair.reserve0)
     )
   }
 
-  if (abUsdtPair !== null) {
+  if (includeAbUsdtPair) {
+    totalLiquidityWAVAX = totalLiquidityWAVAX.plus(abUsdtPair.reserve0)
     price = price.plus(
-      abUsdtPair.token1Price.times(abUsdtPair.reserve0.div(totalLiquidityWAVAX))
+      abUsdtPair.token1Price.times(abUsdtPair.reserve0)
     )
   }
 
-  return price
+  if (totalLiquidityWAVAX.equals(ZERO_BD)) return AVERAGE_AVAX_PRICE_PRE_STABLES
+
+  return price.div(totalLiquidityWAVAX)
 }
 
 // token where amounts should contribute to tracked volume and liquidity
