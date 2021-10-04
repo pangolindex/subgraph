@@ -12,7 +12,7 @@ import {
 } from '../types/schema'
 import { Pair as PairContract, Mint, Burn, Swap, Transfer, Sync } from '../types/templates/Pair/Pair'
 import { updatePairDayData, updateTokenDayData, updatePangolinDayData, updatePairHourData } from './dayUpdates'
-import { getEthPriceInUSD, findEthPerToken, getTrackedVolumeUSD, getTrackedLiquidityUSD } from './pricing'
+import { getAVAXPriceInUSD, findEthPerToken, getTrackedVolumeUSD, getTrackedLiquidityUSD } from './pricing'
 import {
   convertTokenToDecimal,
   ADDRESS_ZERO,
@@ -79,6 +79,19 @@ let MINING_POOLS: string[] = [
   '0x29a7f3d1f27637eda531dc69d989c86ab95225d8', // v2 WAVAX-DYP
   '0xed472431e02ea9ef8cc99b9812c335ac0873bba2', // v2 WAVAX-QI
   '0xa296f9474e77ae21f90afb50713f44cc6916fbb2', // v2 WAVAX-WALBT
+  '0x2e60ab79bbcdfea164874700d5d98969a386eb2a', // v2 WAVAX-HUSKY
+  '0x84b536da1a2d9b0609f9da73139674cc2d75af2d', // v2 WAVAX-USDC.e
+  '0xe6de666a80a357497a2cab3a91f1c28dcaa1eca4', // v2 WAVAX-LYD
+  '0xf2dd964acf53ad8959540cceefd9fea13d4d0eb1', // v2 WAVAX-TUSD
+  '0xd31ffd05a41645631a22a64c1f870a6248a4ddcf', // v2 WAVAX-GAJ
+  '0xa6f2408e3cd34084c37a0d88fed8c6b6490f7529', // v2 WAVAX-GDL
+  '0xd64370aedbebbae04cfcae27e8e0c5ecbd343336', // v2 WAVAX-MFI
+  '0x0029381eff48e9ea963f8095ea204098ac8e44b5', // v2 WAVAX-SHIBX
+  '0x94183dd08ffaa595e43b104804d55ee95492c8cb', // v2 WAVAX-AVE
+  '0x10e5d5f598abb970f85456ea59f0611d77e00168', // v2 WAVAX-ELE
+  '0xfd0824df1e598d34c3495e1c2a339e2fa23af40d', // v2 WAVAX-FRAX
+  '0x76ad5c64fe6b26b6ad9aaaa19eba00e9eca31fe1', // v2 WAVAX-FXS
+  '0x5105d9de003fb7d22979cd0ce167ab919e60900a', // v2 WAVAX-START
   '0x7ac007afb5d61f48d1e3c8cc130d4cf6b765000e', // v2 PNG-ETH (aeb)
   '0x03a9091620cacee4968c915232b175c16a584733', // v2 PNG-WETH.e
   '0xe2510a1fcccde8d2d1c40b41e8f71fb1f47e5bba', // v2 PNG-USDT (aeb)
@@ -110,6 +123,16 @@ let MINING_POOLS: string[] = [
   '0x3a0ef6a586d9c15de30edf5d34ae00e26b0125ce', // v2 PNG-DYP
   '0x2bd42c357a3e13f18849c67e8dc108cc8462ae33', // v2 PNG-QI
   '0x393fe4bc29afbb3786d99f043933c49097449fa1', // v2 PNG-WALBT
+  '0x07b34daabcb75c9cbd0c8aefbc0ed5e30845ef12', // v2 PNG-HUSKY
+  '0x73d1cc4b8da555005e949b3ecee490a7206c14df', // v2 PNG-USDC.e
+  '0xe1314e6d436877850bb955ac074226fcb0b8a86d', // v2 PNG-LYD
+  '0x6fa49bd916e392dc9264636b0b5cf2beee652da3', // v2 PNG-TUSD
+  '0x95bd8fdb58692d343c89bc7bc435773779cc0e47', // v2 PNG-GAJ
+  '0xb008e7ad32c710b07fb8d4453abc79214cd34891', // v2 PNG-GDL
+  '0x4c0650668a63ef468c7bdcd910a62287e9fc4d52', // v2 PNG-MFI
+  '0xecf9b9ae88150f11cbf2263c69823e2ecb84f07b', // v2 PNG-SHIBX
+  '0x7c960e55c8119457528490c3a34c1438faf6b039', // v2 PNG-AVE
+  '0xfcb0c53fc5c71005d11c6838922e254323b7ca06', // v2 PNG-ELE
 ]
 
 function isCompleteMint(mintId: string): boolean {
@@ -326,7 +349,7 @@ export function handleSync(event: Sync): void {
 
   // update ETH price now that reserves could have changed
   let bundle = Bundle.load('1')
-  bundle.ethPrice = getEthPriceInUSD()
+  bundle.ethPrice = getAVAXPriceInUSD(event.block.number)
   bundle.save()
 
   token0.derivedETH = findEthPerToken(token0 as Token)
