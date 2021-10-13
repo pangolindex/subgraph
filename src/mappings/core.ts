@@ -10,7 +10,7 @@ import {
   Swap as SwapEvent,
   Bundle,
 } from '../types/schema'
-import { Pair as PairContract, Mint, Burn, Swap, Transfer, Sync } from '../types/templates/Pair/Pair'
+import { Mint, Burn, Swap, Transfer, Sync } from '../types/templates/Pair/Pair'
 import { updatePairDayData, updateTokenDayData, updatePangolinDayData, updatePairHourData } from './dayUpdates'
 import { getAVAXPriceInUSD, findEthPerToken, getTrackedVolumeUSD, getTrackedLiquidityUSD } from './pricing'
 import {
@@ -182,7 +182,7 @@ export function handleTransfer(event: Transfer): void {
     return
   }
 
-  let factory = PangolinFactory.load(FACTORY_ADDRESS)
+  //let factory = PangolinFactory.load(FACTORY_ADDRESS) // Is this needed?
 
   // user stats
   let from = event.params.from
@@ -192,7 +192,7 @@ export function handleTransfer(event: Transfer): void {
 
   // get pair and load contract
   let pair = Pair.load(event.address.toHexString())
-  let pairContract = PairContract.bind(event.address)
+  //let pairContract = PairContract.bind(event.address)
 
   // liquidity token amount being transferred
   let value = convertTokenToDecimal(event.params.value, BI_18)
@@ -235,7 +235,19 @@ export function handleTransfer(event: Transfer): void {
 
       // save entities
       transaction.save()
-      factory.save()
+      //factory.save() // Is this needed?
+    } else {
+      // if this logical mint included a fee mint, account for this
+      let mint = MintEvent.load(mints[mints.length - 1])
+      mint.feeTo = mint.to
+      mint.to = to
+      mint.feeLiquidity = mint.liquidity
+      mint.liquidity = value
+      mint.save()
+
+      // save entities
+      transaction.save()
+      //factory.save() // Is this needed?
     }
   }
 
