@@ -10,97 +10,65 @@ const AB_DAI_WAVAX_PAIR = '0xba09679ab223c6bdaf44d45ba2d7279959289ab0' // create
 const AB_USDT_WAVAX_PAIR = '0xe28984e1ee8d431346d32bec9ec800efb643eef4' // created block 2,781,997
 
 let AVERAGE_AVAX_PRICE_PRE_STABLES = BigDecimal.fromString('30')
+let AEB_USDT_WAVAX_PAIR_BLOCK = BigInt.fromI32(60337);
+let AEB_DAI_WAVAX_PAIR_BLOCK = BigInt.fromI32(60355);
 let AB_MIGRATION_CUTOVER_BLOCK = BigInt.fromI32(3117207) // August 20 2021 9:00am EST
 
 export function getAVAXPriceInUSD(blockNumber: BigInt): BigDecimal {
-  // fetch AVAX prices from each stablecoin
 
-  let aebUsdtPair = Pair.load(AEB_USDT_WAVAX_PAIR) // USDT is token1
-  let aebDaiPair = Pair.load(AEB_DAI_WAVAX_PAIR) // DAI is token1
-  let abDaiPair = Pair.load(AB_DAI_WAVAX_PAIR) // DAI.e is token1
-  let abUsdtPair = Pair.load(AB_USDT_WAVAX_PAIR) // USDT.e is token1
+  if (blockNumber.gt(AB_MIGRATION_CUTOVER_BLOCK)) { // WAVAX-DAI.e & WAVAX-USDT.e exist
 
-  let includeAebUsdtPair = aebUsdtPair !== null && blockNumber.lt(AB_MIGRATION_CUTOVER_BLOCK)
-  let includeAebDaiPair = aebDaiPair !== null && blockNumber.lt(AB_MIGRATION_CUTOVER_BLOCK)
-  let includeAbDaiPair = abDaiPair !== null
-  let includeAbUsdtPair = abUsdtPair !== null
+    let abDaiPair = Pair.load(AB_DAI_WAVAX_PAIR) // DAI.e is token1
+    let abUsdtPair = Pair.load(AB_USDT_WAVAX_PAIR) // USDT.e is token1
 
-  let totalLiquidityWAVAX = ZERO_BD
+    let totalLiquidityWAVAX = abDaiPair.reserve0.plus(abUsdtPair.reserve0)
+    let abDaiWeight = abDaiPair.reserve0.div(totalLiquidityWAVAX)
+    let abUsdtWeight = abUsdtPair.reserve0.div(totalLiquidityWAVAX)
 
-  let price = ZERO_BD
+    return abDaiPair.token1Price.times(abDaiWeight).plus(abUsdtPair.token1Price.times(abUsdtWeight))
 
-  if (includeAebUsdtPair) {
-    totalLiquidityWAVAX = totalLiquidityWAVAX.plus(aebUsdtPair.reserve0)
-    price = price.plus(
-      aebUsdtPair.token1Price.times(aebUsdtPair.reserve0)
-    )
+  } else if (blockNumber.gt(AEB_DAI_WAVAX_PAIR_BLOCK)) { // WAVAX-USDT & WAVAX-DAI exist
+
+    let aebUsdtPair = Pair.load(AEB_USDT_WAVAX_PAIR) // USDT is token1
+    let aebDaiPair = Pair.load(AEB_DAI_WAVAX_PAIR) // DAI is token1
+
+    let totalLiquidityWAVAX = aebUsdtPair.reserve0.plus(aebDaiPair.reserve0)
+    let aebUsdtWeight = aebUsdtPair.reserve0.div(totalLiquidityWAVAX)
+    let aebDaiWeight = aebDaiPair.reserve0.div(totalLiquidityWAVAX)
+
+    return aebUsdtPair.token1Price.times(aebUsdtWeight).plus(aebDaiPair.token1Price.times(aebDaiWeight))
+
+  } else if (blockNumber.gt(AEB_USDT_WAVAX_PAIR_BLOCK)) { // WAVAX-USDT exists
+
+    let aebUsdtPair = Pair.load(AEB_USDT_WAVAX_PAIR) // USDT is token1
+
+    return aebUsdtPair.token1Price
+
+  } else { /* No stable pairs exist */
+
+    return AVERAGE_AVAX_PRICE_PRE_STABLES
+
   }
 
-  if (includeAebDaiPair) {
-    totalLiquidityWAVAX = totalLiquidityWAVAX.plus(aebDaiPair.reserve0)
-    price = price.plus(
-      aebDaiPair.token1Price.times(aebDaiPair.reserve0)
-    )
-  }
-
-  if (includeAbDaiPair) {
-    totalLiquidityWAVAX = totalLiquidityWAVAX.plus(abDaiPair.reserve0)
-    price = price.plus(
-      abDaiPair.token1Price.times(abDaiPair.reserve0)
-    )
-  }
-
-  if (includeAbUsdtPair) {
-    totalLiquidityWAVAX = totalLiquidityWAVAX.plus(abUsdtPair.reserve0)
-    price = price.plus(
-      abUsdtPair.token1Price.times(abUsdtPair.reserve0)
-    )
-  }
-
-  if (totalLiquidityWAVAX.equals(ZERO_BD)) return AVERAGE_AVAX_PRICE_PRE_STABLES
-
-  return price.div(totalLiquidityWAVAX)
 }
 
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
   WAVAX_ADDRESS, // WAVAX
   '0x60781c2586d68229fde47564546784ab3faca982', // PNG
-  '0xf20d962a6c8f70c731bd838a3a388d7d48fa6e15', // ETH (aeb)
-  '0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab', // WETH.e
-  '0xde3a24028580884448a5397872046a019649b084', // USDT (aeb)
+  '0xde3a24028580884448a5397872046a019649b084', // USDT
   '0xc7198437980c041c805a1edcba50c1ce5db95118', // USDT.e
-  '0xb3fe5374f67d7a22886a0ee082b2e2f9d2651651', // LINK (aeb)
-  '0x5947bb275c521040051d82396192181b413227a3', // LINK.e
-  '0x8ce2dee54bb9921a2ae0a63dbb2df8ed88b91dd9', // AAVE (aeb)
-  '0x63a72806098bd3d9520cc43356dd78afe5d386d9', // AAVE.e
-  '0xf39f9671906d8630812f9d9863bbef5d523c84ab', // UNI (aeb)
-  '0x8ebaf22b6f053dffeaf46f4dd9efa95d89ba8580', // UNI.e
-  '0x408d4cd0adb7cebd1f1a1c33a0ba2098e1295bab', // WBTC (aeb)
-  '0x50b7545627a5162f82a992c33b87adc75187b218', // WBTC.e
-  '0x39cf1bd5f15fb22ec3d9ff86b0727afc203427cc', // SUSHI (aeb)
-  '0x37b608519f91f70f2eeb0e5ed9af4061722e4f76', // SUSHI.e
-  '0xba7deebbfc5fa1100fb055a87773e1e99cd3507a', // DAI (aeb)
+  '0xba7deebbfc5fa1100fb055a87773e1e99cd3507a', // DAI
   '0xd586e7f844cea2f87f50152665bcbc2c279d8d70', // DAI.e
-  '0x99519acb025a0e0d44c3875a4bbf03af65933627', // YFI (aeb)
-  '0x9eaac1b23d935365bd7b542fe22ceee2922f52dc', // YFI.e
-  '0xc38f41a296a4493ff429f1238e030924a1542e50', // SNOB
-  '0x846d50248baf8b7ceaa9d9b53bfd12d7d7fbb25a', // VSO
-  '0x6e7f5c0b9f4432716bdd0a77a3601291b9d9e985', // SPORE
-  '0xd6070ae98b8069de6b494332d1a1a81b6179d960', // BIFI (anyswap)
-  '0x264c1383ea520f73dd837f915ef3a732e204a493', // BNB (anyswap)
-  '0xd1c3f94de7e5b45fa4edbba472491a9f4b166fc4', // XAVA
-  '0xe896cdeaac9615145c0ca09c8cd5c25bced6384c', // PEFI
-  '0x564a341df6c126f90cf3ecb92120fd7190acb401', // TRYB
-  '0xa5e59761ebd4436fa4d20e1a27cba29fb2471fc6', // SHERPA
-  '0x59414b3089ce2af0010e7523dea7e2b35d776ec7', // YAK
-  '0x8729438eb15e2c8b576fcc6aecda6a148776c0f5', // QI
-  '0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17', // DYP
-  '0x9e037de681cafa6e661e6108ed9c2bd1aa567ecd', // WALBT
+  '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664', // USDC.e
+  '0xf20d962a6c8f70c731bd838a3a388d7d48fa6e15', // ETH
+  '0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab', // WETH.e
+  '0x408d4cd0adb7cebd1f1a1c33a0ba2098e1295bab', // WBTC
+  '0x50b7545627a5162f82a992c33b87adc75187b218', // WBTC.e
 ]
 
 // minimum liquidity required to count towards tracked volume for pairs with small # of Lps
-let MINIMUM_USD_THRESHOLD_NEW_PAIRS = BigDecimal.fromString('10')
+let MINIMUM_USD_THRESHOLD_NEW_PAIRS = BigDecimal.fromString('1000')
 
 // minimum liquidity for price to get tracked
 let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('1')

@@ -10,7 +10,7 @@ import {
   Swap as SwapEvent,
   Bundle,
 } from '../types/schema'
-import { Pair as PairContract, Mint, Burn, Swap, Transfer, Sync } from '../types/templates/Pair/Pair'
+import { Mint, Burn, Swap, Transfer, Sync } from '../types/templates/Pair/Pair'
 import { updatePairDayData, updateTokenDayData, updatePangolinDayData, updatePairHourData } from './dayUpdates'
 import { getAVAXPriceInUSD, findEthPerToken, getTrackedVolumeUSD, getTrackedLiquidityUSD } from './pricing'
 import {
@@ -92,6 +92,34 @@ let MINING_POOLS: string[] = [
   '0xfd0824df1e598d34c3495e1c2a339e2fa23af40d', // v2 WAVAX-FRAX
   '0x76ad5c64fe6b26b6ad9aaaa19eba00e9eca31fe1', // v2 WAVAX-FXS
   '0x5105d9de003fb7d22979cd0ce167ab919e60900a', // v2 WAVAX-START
+  '0x255e7a0eb5aa1616781702203b042821c35394ef', // v2 WAVAX-SWAP.e (aeb)
+  '0x6f571ba11447136fc11ba9ac98f0f0233dac1bff', // v2 WAVAX-YTS
+  '0xed617a06c6c727827ca3b6fb3e565c68342c4c2b', // v2 WAVAX-TUNDRA
+  '0xbd56b964fcdd208a7a83c291864eeb8271bab773', // v2 WAVAX-XUSD
+  '0x5d479aebfc49b9e08860bbfcfb3bb4d768aa1fc3', // v2 WAVAX-XDO
+  '0xc0b2d45b8617997bcdad0f33aee03e4df4c4f81e', // v2 WAVAX-JOE
+  '0x184949e5a7e8740da20231b90fd38e7725fa657a', // v2 WAVAX-ZABU
+  '0x2dae4d6cccd824917ca783774c1e8854ff86951f', // v2 WAVAX-YAY
+  '0x62da43b98a9338221cc36dda40605b0f5ea0ac2d', // v2 WAVAX-STORM
+  '0xda959f3464fe2375f0b1f8a872404181931978b2', // v2 WAVAX-VEE
+  '0x05930052a9a1e2f14b0e6ccc726b60e06792fb67', // v2 WAVAX-AVXT
+  '0x01bc14c7063212c8cac269960ba875e58568e4fd', // v2 WAVAX-OLIVE
+  '0xac102f66a1670508dfa5753fcbbba80e0648a0c7', // v2 WAVAX-APE-IN
+  '0x6cfdb5ce2a26a5b07041618fdad81273815c8bb4', // v2 WAVAX-GB
+  '0xd43035f5ef932e1335a664c707d85c54c924667e', // v2 WAVAX-CNR
+  '0x45cd033361e9fef750aaea96dbc360b342f4b4a2', // v2 WAVAX-CYCLE
+  '0x12b493a6e4f185ef1feef45565654f71156c25ba', // v2 WAVAX-ICE
+  '0x716c19807f46f97ddac0745878675ff5b3a75004', // v2 WAVAX-mYAK
+  '0x437352a8e2394379521bc84f0874c66c94f32fbb', // v2 WAVAX-WOW
+  '0x676247d8729b728beea83d1c1314acdd937327b6', // v2 WAVAX-TEDDY
+  '0x30914dbb452bef7ad226af0aeb130658a4ac1cb0', // v2 WAVAX-TSD
+  '0xfc04c452035a1e4d4fd4d5bf6b083cb563a20ca4', // v2 WAVAX-EVRT
+  '0xa69057977211c7bae847c72df6338d1b71e838af', // v2 WAVAX-RAI
+  '0xaa01f80375528f36291677c683905b4a113a6470', // v2 WAVAX-aAVAXb
+  '0x41d731926e5b8d3ba70bb62b9f067a163be706ab', // v2 WAVAX-INSUR
+  '0xe4fed988974c0b7dfeb162287ded67c6b197af63', // v2 WAVAX-AVME
+  '0x0875e51e54fbb7e63b1819acb069dc8d684563eb', // v2 WAVAX-TIME
+
   '0x7ac007afb5d61f48d1e3c8cc130d4cf6b765000e', // v2 PNG-ETH (aeb)
   '0x03a9091620cacee4968c915232b175c16a584733', // v2 PNG-WETH.e
   '0xe2510a1fcccde8d2d1c40b41e8f71fb1f47e5bba', // v2 PNG-USDT (aeb)
@@ -154,7 +182,7 @@ export function handleTransfer(event: Transfer): void {
     return
   }
 
-  let factory = PangolinFactory.load(FACTORY_ADDRESS)
+  //let factory = PangolinFactory.load(FACTORY_ADDRESS) // Is this needed?
 
   // user stats
   let from = event.params.from
@@ -164,7 +192,7 @@ export function handleTransfer(event: Transfer): void {
 
   // get pair and load contract
   let pair = Pair.load(event.address.toHexString())
-  let pairContract = PairContract.bind(event.address)
+  //let pairContract = PairContract.bind(event.address)
 
   // liquidity token amount being transferred
   let value = convertTokenToDecimal(event.params.value, BI_18)
@@ -207,7 +235,19 @@ export function handleTransfer(event: Transfer): void {
 
       // save entities
       transaction.save()
-      factory.save()
+      //factory.save() // Is this needed?
+    } else {
+      // if this logical mint included a fee mint, account for this
+      let mint = MintEvent.load(mints[mints.length - 1])
+      mint.feeTo = mint.to
+      mint.to = to
+      mint.feeLiquidity = mint.liquidity
+      mint.liquidity = value
+      mint.save()
+
+      // save entities
+      transaction.save()
+      //factory.save() // Is this needed?
     }
   }
 
@@ -652,7 +692,7 @@ export function handleSwap(event: Swap): void {
 
   // swap specific updating for token0
   token0DayData.dailyVolumeToken = token0DayData.dailyVolumeToken.plus(amount0Total)
-  token0DayData.dailyVolumeETH = token0DayData.dailyVolumeETH.plus(amount0Total.times(token1.derivedETH as BigDecimal))
+  token0DayData.dailyVolumeETH = token0DayData.dailyVolumeETH.plus(amount0Total.times(token0.derivedETH as BigDecimal))
   token0DayData.dailyVolumeUSD = token0DayData.dailyVolumeUSD.plus(
     amount0Total.times(token0.derivedETH as BigDecimal).times(bundle.ethPrice)
   )
