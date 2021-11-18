@@ -27,6 +27,8 @@ import {
 } from './helpers'
 
 let MINING_POOLS: string[] = [
+  '0x1f806f7c8ded893fd3cae279191ad7aa3798e928', // MiniChefV2
+
   "0xa16381eae6285123c323a665d4d99a6bcfaac307", // v1 WAVAX-ETH (aeb)
   "0x4f019452f51bba0250ec8b69d64282b79fc8bd9f", // v1 WAVAX-USDT (aeb)
   "0x01897e996eefff65ae9999c02d1d8d7e9e0c0352", // v1 WAVAX-WBTC (aeb)
