@@ -27,6 +27,8 @@ import {
 } from './helpers'
 
 let MINING_POOLS: string[] = [
+  '0x1f806f7c8ded893fd3cae279191ad7aa3798e928', // MiniChefV2
+
   "0xa16381eae6285123c323a665d4d99a6bcfaac307", // v1 WAVAX-ETH (aeb)
   "0x4f019452f51bba0250ec8b69d64282b79fc8bd9f", // v1 WAVAX-USDT (aeb)
   "0x01897e996eefff65ae9999c02d1d8d7e9e0c0352", // v1 WAVAX-WBTC (aeb)
@@ -119,6 +121,12 @@ let MINING_POOLS: string[] = [
   '0x41d731926e5b8d3ba70bb62b9f067a163be706ab', // v2 WAVAX-INSUR
   '0xe4fed988974c0b7dfeb162287ded67c6b197af63', // v2 WAVAX-AVME
   '0x0875e51e54fbb7e63b1819acb069dc8d684563eb', // v2 WAVAX-TIME
+  '0x6528dcc443b2e014185946d1dc1efd6e9abe4cd8', // v2 WAVAX-HCT
+  '0x55152e05202ae58fdab26b20c6fd762f5bca797c', // v2 WAVAX-FRAX2
+  '0x23855f21d158efae410e3568fb623c35bc1952e0', // v2 WAVAX-ROCO
+  '0xd6887808cfcd5cbff867379e41fac912f167b084', // v2 WAVAX-IMX
+  '0xfe6338bebef1989afa225494a63f235d8e8f46fd', // v2 WAVAX-AMPL
+  '0xc2ecb35624ad941474371e696ac8dad0dda5e4d5', // v2 WAVAX-ORBS
 
   '0x7ac007afb5d61f48d1e3c8cc130d4cf6b765000e', // v2 PNG-ETH (aeb)
   '0x03a9091620cacee4968c915232b175c16a584733', // v2 PNG-WETH.e
