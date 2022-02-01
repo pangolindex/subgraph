@@ -65,6 +65,8 @@ let WHITELIST: string[] = [
   '0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab', // WETH.e
   '0x408d4cd0adb7cebd1f1a1c33a0ba2098e1295bab', // WBTC
   '0x50b7545627a5162f82a992c33b87adc75187b218', // WBTC.e
+  '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e', // USDC (native)
+  '0x260bbf5698121eb85e7a74f2e45e16ce762ebe11', // UST (axelar)
 ]
 
 // minimum liquidity required to count towards tracked volume for pairs with small # of Lps
