@@ -3,7 +3,7 @@ import { log, BigInt, BigDecimal, Address, EthereumEvent } from '@graphprotocol/
 import { ERC20 } from '../../generated/Factory/ERC20'
 import { ERC20SymbolBytes } from '../../generated/Factory/ERC20SymbolBytes'
 import { ERC20NameBytes } from '../../generated/Factory/ERC20NameBytes'
-import { User, Bundle, Token, LiquidityPosition, LiquidityPositionSnapshot, Pair } from '../../generated/schema'
+import { User, Bundle, Farm, Token, LiquidityPosition, LiquidityPositionSnapshot, Pair } from '../../generated/schema'
 import { Factory as FactoryContract } from '../../generated/templates/Pair/Factory'
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
@@ -154,6 +154,18 @@ export function createUser(address: Address): void {
     user = new User(address.toHexString())
     user.usdSwapped = ZERO_BD
     user.save()
+  }
+}
+
+export function createFarm(chef: Address, pid: BigInt, pair: Address): void {
+  let farmKey = `${chef.toHexString()}-${pid.toHexString()}`
+  let farm = Farm.load(farmKey)
+  if (farm === null) {
+    farm = new Farm(farmKey)
+    farm.chefAddress = chef
+    farm.pid = pid
+    farm.pairAddress = pair
+    farm.save()
   }
 }
 

@@ -96,6 +96,13 @@ type Pair @entity {
   swaps: [Swap!]! @derivedFrom(field: "pair")
 }
 
+type Farm @entity {
+  id: ID!
+  chefAddress: Bytes!
+  pid: BigInt!
+  pairAddress: Bytes!
+}
+
 type User @entity {
   id: ID!
   liquidityPositions: [LiquidityPosition!] @derivedFrom(field: "user")
