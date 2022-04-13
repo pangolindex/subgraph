@@ -4,3 +4,4 @@ src/types/
 .DS_STORE
 yarn-error.log
 .idea
+**/types/**
