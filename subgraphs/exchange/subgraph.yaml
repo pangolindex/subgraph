@@ -47,7 +47,7 @@ dataSources:
         - Farm
       abis:
         - name: MiniChefV2
-          file: ./abis/MiniChefV2.json
+          file: ../../abis/MiniChefV2.json
       eventHandlers:
         - event: PoolAdded(indexed uint256,uint256,indexed address,indexed address)
           handler: handlePoolAdded
