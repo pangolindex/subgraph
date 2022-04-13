@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
-import { Pair, Token, Bundle } from '../types/schema'
-import { BigDecimal, Address, BigInt } from '@graphprotocol/graph-ts/index'
+import { BigDecimal, Address, BigInt } from '@graphprotocol/graph-ts'
+import { Pair, Token, Bundle } from '../../generated/schema'
 import { ZERO_BD, factoryContract, ADDRESS_ZERO, ONE_BD } from './helpers'
 
 const WAVAX_ADDRESS = '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7'

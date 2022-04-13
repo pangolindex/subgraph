@@ -9,8 +9,8 @@ import {
   Burn as BurnEvent,
   Swap as SwapEvent,
   Bundle,
-} from '../types/schema'
-import { Mint, Burn, Swap, Transfer, Sync } from '../types/templates/Pair/Pair'
+} from '../../generated/schema'
+import { Mint, Burn, Swap, Transfer, Sync } from '../../generated/templates/Pair/Pair'
 import { updatePairDayData, updateTokenDayData, updatePangolinDayData, updatePairHourData } from './dayUpdates'
 import { getAVAXPriceInUSD, findEthPerToken, getTrackedVolumeUSD, getTrackedLiquidityUSD } from './pricing'
 import {

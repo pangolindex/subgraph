@@ -1,7 +1,15 @@
-import { PairHourData } from './../types/schema'
 /* eslint-disable prefer-const */
 import { BigInt, BigDecimal, EthereumEvent } from '@graphprotocol/graph-ts'
-import { Pair, Bundle, Token, PangolinFactory, PangolinDayData, PairDayData, TokenDayData } from '../types/schema'
+import {
+  Pair,
+  Bundle,
+  Token,
+  PangolinFactory,
+  PangolinDayData,
+  PairDayData,
+  PairHourData,
+  TokenDayData
+} from '../../generated/schema'
 import { ONE_BI, ZERO_BD, ZERO_BI, FACTORY_ADDRESS } from './helpers'
 
 export function updatePangolinDayData(event: EthereumEvent): PangolinDayData {
