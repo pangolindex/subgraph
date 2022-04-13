@@ -13,6 +13,13 @@
     "watch-local": "graph deploy graphprotocol/pangolin-dex --watch --debug --node http://127.0.0.1:8020/ --ipfs http://localhost:5001"
   },
   "devDependencies": {
-    "@graphprotocol/graph-ts": "0.16.0"
+    "@graphprotocol/graph-cli": "0.16.2",
+    "@graphprotocol/graph-ts": "0.16.0",
+    "@typescript-eslint/eslint-plugin": "2.34.0",
+    "@typescript-eslint/parser": "2.34.0",
+    "eslint": "6.8.0",
+    "eslint-config-prettier": "6.15.0",
+    "prettier": "1.19.1",
+    "typescript": "^3.5.2"
   }
 }

@@ -4,9 +4,14 @@
   "version": "1.2.1",
   "repository": "https://github.com/pangolindex/subgraph",
   "license": "GPL-3.0-or-later",
-  "workspaces": [
-    "subgraphs/*"
-  ],
+  "workspaces": {
+    "subgraphs": [
+      "subgraphs/*"
+    ],
+    "nohoist": [
+      "**"
+    ]
+  },
   "scripts": {
     "build": "yarn workspaces run build",
     "codegen": "yarn workspaces run codegen",
@@ -16,14 +21,5 @@
     "deploy-staging": "yarn workspaces run deploy-staging",
     "watch-local": "yarn workspaces run watch-local"
   },
-  "devDependencies": {
-    "@graphprotocol/graph-cli": "0.16.2",
-    "@graphprotocol/graph-ts": "0.16.0",
-    "@typescript-eslint/eslint-plugin": "2.34.0",
-    "@typescript-eslint/parser": "2.34.0",
-    "eslint": "6.8.0",
-    "eslint-config-prettier": "6.15.0",
-    "prettier": "1.19.1",
-    "typescript": "^3.5.2"
-  }
+  "devDependencies": {}
 }
