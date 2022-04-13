@@ -4,8 +4,8 @@ type Proposal @entity {
   eta: BigInt
   proposer: Bytes!
   targets: [Bytes!]
-  forVotes: BigInt
-  againstVotes: BigInt
+  forVotes: BigInt!
+  againstVotes: BigInt!
   startTime: BigInt!
   endTime: BigInt!
   signatures: [String!]

@@ -6,7 +6,7 @@ import {
   VoteCast,
   ProposalQueued,
 } from "./types/Governance/Governance";
-import { log, Bytes } from "@graphprotocol/graph-ts";
+import { Bytes, log } from "@graphprotocol/graph-ts";
 import { Proposal } from "./types/schema";
 
 export function handleNewProposal(event: ProposalCreated): void {
@@ -16,7 +16,8 @@ export function handleNewProposal(event: ProposalCreated): void {
   proposal.description = event.params.description;
   proposal.proposer = event.params.proposer;
 
-  proposal.targets = event.params.targets as Array<Bytes>;
+  // @ts-ignore
+  proposal.targets = changetype<Array<Bytes>>(event.params.targets);
 
   proposal.startTime = event.params.startTime;
   proposal.endTime = event.params.endTime;
