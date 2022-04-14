@@ -8,7 +8,7 @@ dataSources:
     name: Governance
     network: avalanche
     source:
-      startBlock: 920834
+      startBlock: 1005510
       address: "0xb0Ff2b1047d9E8d294c2eD798faE3fA817F43Ee1"
       abi: Governance
     mapping:
