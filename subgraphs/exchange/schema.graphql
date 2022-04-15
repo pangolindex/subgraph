@@ -98,6 +98,11 @@ type Pair @entity {
   swaps: [Swap!]! @derivedFrom(field: "pair")
 }
 
+type PairCache @entity {
+    id: ID!
+    pair: Pair!
+}
+
 type Farm @entity {
   id: ID!
   chefAddress: Bytes!

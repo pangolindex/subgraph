@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import { log } from '@graphprotocol/graph-ts'
-import { PangolinFactory, Pair, Token, Bundle } from '../generated/schema'
+import { PangolinFactory, Pair, PairCache, Token, Bundle } from '../generated/schema'
 import { PairCreated } from '../generated/Factory/Factory'
 import { Pair as PairTemplate } from '../generated/templates'
 import {
@@ -109,9 +109,17 @@ export function handleNewPair(event: PairCreated): void {
   // create the tracked contract based on the template
   PairTemplate.create(event.params.pair)
 
+  // "cache" pair for quick off-chain lookups via tokens
+  let pairCacheAB = new PairCache(token0.id + token1.id)
+  pairCacheAB.pair = pair.id
+  let pairCacheBA = new PairCache(token1.id + token0.id)
+  pairCacheBA.pair = pair.id
+
   // save updated values
   token0.save()
   token1.save()
   pair.save()
   factory.save()
+  pairCacheAB.save()
+  pairCacheBA.save()
 }

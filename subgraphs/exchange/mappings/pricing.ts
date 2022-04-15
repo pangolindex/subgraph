@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
-import { Pair, Token, Bundle } from '../generated/schema'
+import { Pair, Token, Bundle, PairCache } from '../generated/schema'
 import { ZERO_BD, ONE_BD, TWO_BD } from './helpers'
 
 const WAVAX_ADDRESS = '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7'
@@ -53,20 +53,25 @@ export function getAVAXPriceInUSD(blockNumber: BigInt): BigDecimal {
 }
 
 // token where amounts should contribute to tracked volume and liquidity
+// tokens listed earlier take precedence for selecting a pair for valuation
+// all addresses MUST be lowercase
 let WHITELIST: string[] = [
   WAVAX_ADDRESS, // WAVAX
   '0x60781c2586d68229fde47564546784ab3faca982', // PNG
-  '0xde3a24028580884448a5397872046a019649b084', // USDT
-  '0xc7198437980c041c805a1edcba50c1ce5db95118', // USDT.e
-  '0xba7deebbfc5fa1100fb055a87773e1e99cd3507a', // DAI
-  '0xd586e7f844cea2f87f50152665bcbc2c279d8d70', // DAI.e
-  '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664', // USDC.e
-  '0xf20d962a6c8f70c731bd838a3a388d7d48fa6e15', // ETH
-  '0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab', // WETH.e
-  '0x408d4cd0adb7cebd1f1a1c33a0ba2098e1295bab', // WBTC
-  '0x50b7545627a5162f82a992c33b87adc75187b218', // WBTC.e
   '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e', // USDC (native)
+  '0xb599c3590f42f8f995ecfa0f85d2980b76862fc1', // UST (wormhole)
   '0x260bbf5698121eb85e7a74f2e45e16ce762ebe11', // UST (axelar)
+
+  // AB Assets
+  '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664', // USDC.e
+  '0xc7198437980c041c805a1edcba50c1ce5db95118', // USDT.e
+  '0xd586e7f844cea2f87f50152665bcbc2c279d8d70', // DAI.e
+
+  // Legacy AEB Assets
+  '0xde3a24028580884448a5397872046a019649b084', // USDT
+  '0xba7deebbfc5fa1100fb055a87773e1e99cd3507a', // DAI
+  '0xf20d962a6c8f70c731bd838a3a388d7d48fa6e15', // ETH
+  '0x408d4cd0adb7cebd1f1a1c33a0ba2098e1295bab', // WBTC
 ]
 
 // minimum liquidity required to count towards tracked volume for pairs with small # of Lps
@@ -77,7 +82,6 @@ let MINIMUM_USD_LIQUIDITY_THRESHOLD = BigDecimal.fromString('1000')
 
 /**
  * Search through graph to find derived Eth per token.
- * @todo update to be derived ETH (add stablecoin estimates)
  **/
 export function findEthPerToken(token: Token): BigDecimal {
   if (token.id == WAVAX_ADDRESS) {
@@ -85,16 +89,18 @@ export function findEthPerToken(token: Token): BigDecimal {
   }
   // loop through whitelist and check if paired with any
   for (let i = 0; i < WHITELIST.length; ++i) {
-    let pairAddress = factoryContract.getPair(Address.fromString(token.id), Address.fromString(WHITELIST[i]))
-    if (pairAddress.toHexString() != ADDRESS_ZERO) {
-      let pair = Pair.load(pairAddress.toHexString())
-      if (pair.token0 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
-        let token1 = Token.load(pair.token1)
-        return pair.token1Price.times(token1.derivedETH as BigDecimal) // return token1 per our token * Eth per token 1
-      }
-      if (pair.token1 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
-        let token0 = Token.load(pair.token0)
-        return pair.token0Price.times(token0.derivedETH as BigDecimal) // return token0 per our token * ETH per token 0
+    let pairCache = PairCache.load(token.id + WHITELIST[i])
+    if (pairCache !== null) {
+      let pair = Pair.load(pairCache.pair)
+      if (pair.reserveUSD.gt(MINIMUM_USD_LIQUIDITY_THRESHOLD)) {
+        if (pair.token0 == token.id) {
+          let token1 = Token.load(pair.token1)
+          return pair.token1Price.times(token1.derivedETH as BigDecimal) // return token1 per our token * AVAX per token 1
+        }
+        if (pair.token1 == token.id) {
+          let token0 = Token.load(pair.token0)
+          return pair.token0Price.times(token0.derivedETH as BigDecimal) // return token0 per our token * AVAX per token 0
+        }
       }
     }
   }
