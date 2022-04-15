@@ -5,7 +5,7 @@
   "repository": "https://github.com/pangolindex/subgraph",
   "license": "GPL-3.0-or-later",
   "workspaces": {
-    "subgraphs": [
+    "packages": [
       "subgraphs/*"
     ],
     "nohoist": [
