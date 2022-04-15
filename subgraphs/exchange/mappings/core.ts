@@ -21,6 +21,7 @@ import {
   ONE_BI,
   createUser,
   createLiquidityPosition,
+  TWO_BD,
   ZERO_BD,
   BI_18,
   createLiquiditySnapshot
@@ -580,7 +581,7 @@ export function handleSwap(event: Swap): void {
   let derivedAmountETH = token1.derivedETH
     .times(amount1Total)
     .plus(token0.derivedETH.times(amount0Total))
-    .div(BigDecimal.fromString('2'))
+    .div(TWO_BD)
   let derivedAmountUSD = derivedAmountETH.times(bundle.ethPrice)
 
   // only accounts for volume through white listed tokens

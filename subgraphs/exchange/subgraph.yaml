@@ -53,7 +53,7 @@ dataSources:
           handler: handlePoolAdded
         - event: Deposit(indexed address,indexed uint256,uint256,indexed address)
           handler: handleDeposit
-        - event:  Withdraw(indexed address,indexed uint256,uint256,indexed address)
+        - event: Withdraw(indexed address,indexed uint256,uint256,indexed address)
           handler: handleWithdraw
 templates:
   - kind: ethereum/contract

@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import { BigDecimal, Address, BigInt } from '@graphprotocol/graph-ts'
 import { Pair, Token, Bundle } from '../generated/schema'
-import { ZERO_BD, factoryContract, ADDRESS_ZERO, ONE_BD } from './helpers'
+import { ZERO_BD, ONE_BD, TWO_BD } from './helpers'
 
 const WAVAX_ADDRESS = '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7'
 const AEB_USDT_WAVAX_PAIR = '0x9ee0a4e21bd333a6bb2ab298194320b8daa26516' // created block 60,337
@@ -73,7 +73,7 @@ let WHITELIST: string[] = [
 let MINIMUM_USD_THRESHOLD_NEW_PAIRS = BigDecimal.fromString('1000')
 
 // minimum liquidity for price to get tracked
-let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('1')
+let MINIMUM_USD_LIQUIDITY_THRESHOLD = BigDecimal.fromString('1000')
 
 /**
  * Search through graph to find derived Eth per token.
@@ -128,12 +128,12 @@ export function getTrackedVolumeUSD(
       }
     }
     if (WHITELIST.includes(token0.id) && !WHITELIST.includes(token1.id)) {
-      if (reserve0USD.times(BigDecimal.fromString('2')).lt(MINIMUM_USD_THRESHOLD_NEW_PAIRS)) {
+      if (reserve0USD.times(TWO_BD).lt(MINIMUM_USD_THRESHOLD_NEW_PAIRS)) {
         return ZERO_BD
       }
     }
     if (!WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {
-      if (reserve1USD.times(BigDecimal.fromString('2')).lt(MINIMUM_USD_THRESHOLD_NEW_PAIRS)) {
+      if (reserve1USD.times(TWO_BD).lt(MINIMUM_USD_THRESHOLD_NEW_PAIRS)) {
         return ZERO_BD
       }
     }
@@ -144,7 +144,7 @@ export function getTrackedVolumeUSD(
     return tokenAmount0
       .times(price0)
       .plus(tokenAmount1.times(price1))
-      .div(BigDecimal.fromString('2'))
+      .div(TWO_BD)
   }
 
   // take full value of the whitelisted token amount
@@ -184,12 +184,12 @@ export function getTrackedLiquidityUSD(
 
   // take double value of the whitelisted token amount
   if (WHITELIST.includes(token0.id) && !WHITELIST.includes(token1.id)) {
-    return tokenAmount0.times(price0).times(BigDecimal.fromString('2'))
+    return tokenAmount0.times(price0).times(TWO_BD)
   }
 
   // take double value of the whitelisted token amount
   if (!WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {
-    return tokenAmount1.times(price1).times(BigDecimal.fromString('2'))
+    return tokenAmount1.times(price1).times(TWO_BD)
   }
 
   // neither token is on white list, tracked volume is 0
