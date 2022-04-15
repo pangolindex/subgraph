@@ -9,7 +9,7 @@ import {
   PairDayData,
   PairHourData,
   TokenDayData
-} from '../../generated/schema'
+} from '../generated/schema'
 import { ONE_BI, ZERO_BD, ZERO_BI, FACTORY_ADDRESS } from './helpers'
 
 export function updatePangolinDayData(event: EthereumEvent): PangolinDayData {

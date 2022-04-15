@@ -15,7 +15,7 @@ dataSources:
       kind: ethereum/events
       apiVersion: 0.0.3
       language: wasm/assemblyscript
-      file: ./src/mappings/factory.ts
+      file: ./mappings/factory.ts
       entities:
         - Pair
         - Token
@@ -42,7 +42,7 @@ dataSources:
       kind: ethereum/events
       apiVersion: 0.0.3
       language: wasm/assemblyscript
-      file: ./src/mappings/miniChefV2.ts
+      file: ./mappings/miniChefV2.ts
       entities:
         - Farm
       abis:
@@ -65,7 +65,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.3
       language: wasm/assemblyscript
-      file: ./src/mappings/core.ts
+      file: ./mappings/core.ts
       entities:
         - Pair
         - Token

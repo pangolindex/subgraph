@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import { BigDecimal, Address, BigInt } from '@graphprotocol/graph-ts'
-import { Pair, Token, Bundle } from '../../generated/schema'
+import { Pair, Token, Bundle } from '../generated/schema'
 import { ZERO_BD, factoryContract, ADDRESS_ZERO, ONE_BD } from './helpers'
 
 const WAVAX_ADDRESS = '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7'
@@ -118,7 +118,7 @@ export function getTrackedVolumeUSD(
   let price0 = token0.derivedETH.times(bundle.ethPrice)
   let price1 = token1.derivedETH.times(bundle.ethPrice)
 
-  // if less than 5 LPs, require high minimum reserve amount amount or return 0
+  // if less than 5 LPs, require high minimum reserve amount or return 0
   if (pair.liquidityProviderCount.lt(BigInt.fromI32(5))) {
     let reserve0USD = pair.reserve0.times(price0)
     let reserve1USD = pair.reserve1.times(price1)

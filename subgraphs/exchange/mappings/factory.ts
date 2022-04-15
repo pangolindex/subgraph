@@ -1,8 +1,8 @@
 /* eslint-disable prefer-const */
 import { log } from '@graphprotocol/graph-ts'
-import { PangolinFactory, Pair, Token, Bundle } from '../../generated/schema'
-import { PairCreated } from '../../generated/Factory/Factory'
-import { Pair as PairTemplate } from '../../generated/templates'
+import { PangolinFactory, Pair, Token, Bundle } from '../generated/schema'
+import { PairCreated } from '../generated/Factory/Factory'
+import { Pair as PairTemplate } from '../generated/templates'
 import {
   FACTORY_ADDRESS,
   ZERO_BD,

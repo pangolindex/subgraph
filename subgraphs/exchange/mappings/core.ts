@@ -9,8 +9,8 @@ import {
   Burn as BurnEvent,
   Swap as SwapEvent,
   Bundle,
-} from '../../generated/schema'
-import { Mint, Burn, Swap, Transfer, Sync } from '../../generated/templates/Pair/Pair'
+} from '../generated/schema'
+import { Mint, Burn, Swap, Transfer, Sync } from '../generated/templates/Pair/Pair'
 import { updatePairDayData, updateTokenDayData, updatePangolinDayData, updatePairHourData } from './dayUpdates'
 import { getAVAXPriceInUSD, findEthPerToken, getTrackedVolumeUSD, getTrackedLiquidityUSD } from './pricing'
 import {
@@ -190,8 +190,6 @@ export function handleTransfer(event: Transfer): void {
     return
   }
 
-  //let factory = PangolinFactory.load(FACTORY_ADDRESS) // Is this needed?
-
   // user stats
   let from = event.params.from
   createUser(from)
@@ -200,7 +198,6 @@ export function handleTransfer(event: Transfer): void {
 
   // get pair and load contract
   let pair = Pair.load(event.address.toHexString())
-  //let pairContract = PairContract.bind(event.address)
 
   // liquidity token amount being transferred
   let value = convertTokenToDecimal(event.params.value, BI_18)
