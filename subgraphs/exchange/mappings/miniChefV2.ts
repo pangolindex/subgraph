@@ -15,12 +15,11 @@ export function handlePoolAdded(event: PoolAdded): void {
   createFarm(event.address, event.params.pid, event.params.lpToken)
 }
 
-// address indexed user, uint256 indexed pid, uint256 amount, address indexed to
 export function handleDeposit(event: Deposit): void {
   // user stats
   createUser(event.params.to)
 
-  if (event.params.user !== event.params.to) {
+  if (event.params.user.notEqual(event.params.to)) {
     let chef = event.address.toHexString()
     let pid = event.params.pid.toHexString()
     let farmKey = `${chef}-${pid}`
@@ -40,12 +39,11 @@ export function handleDeposit(event: Deposit): void {
   }
 }
 
-// address indexed user, uint256 indexed pid, uint256 amount, address indexed to
 export function handleWithdraw(event: Withdraw): void {
   // user stats
   createUser(event.params.to)
 
-  if (event.params.user !== event.params.to) {
+  if (event.params.user.notEqual(event.params.to)) {
     let chef = event.address.toHexString()
     let pid = event.params.pid.toHexString()
     let farmKey = `${chef}-${pid}`
