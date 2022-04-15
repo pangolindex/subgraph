@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import { BigDecimal, Address, BigInt } from '@graphprotocol/graph-ts'
+import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
 import { Pair, Token, Bundle } from '../generated/schema'
 import { ZERO_BD, ONE_BD, TWO_BD } from './helpers'
 
@@ -171,11 +171,11 @@ export function getTrackedLiquidityUSD(
   tokenAmount0: BigDecimal,
   token0: Token,
   tokenAmount1: BigDecimal,
-  token1: Token
+  token1: Token,
+  avaxPrice: BigDecimal
 ): BigDecimal {
-  let bundle = Bundle.load('1')
-  let price0 = token0.derivedETH.times(bundle.ethPrice)
-  let price1 = token1.derivedETH.times(bundle.ethPrice)
+  let price0 = token0.derivedETH.times(avaxPrice)
+  let price1 = token1.derivedETH.times(avaxPrice)
 
   // both are whitelist tokens, take average of both amounts
   if (WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {

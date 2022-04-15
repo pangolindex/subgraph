@@ -44,7 +44,8 @@ type Token @entity {
   totalLiquidity: BigDecimal!
 
   # derived prices
-  derivedETH: BigDecimal
+  derivedETH: BigDecimal!
+  derivedUSD: BigDecimal!
 
   # derived fields
   tokenDayData: [TokenDayData!]! @derivedFrom(field: "token")
@@ -69,6 +70,7 @@ type Pair @entity {
   reserveETH: BigDecimal!
   reserveUSD: BigDecimal!
   trackedReserveETH: BigDecimal! # used for separating per pair reserves and global
+  trackedReserveUSD: BigDecimal! # used for separating per pair reserves and global
   # Price in terms of the asset pair
   token0Price: BigDecimal!
   token1Price: BigDecimal!

@@ -376,8 +376,8 @@ export function handleSync(event: Sync): void {
   let token1 = Token.load(pair.token1)
   let pangolin = PangolinFactory.load(FACTORY_ADDRESS)
 
-  // reset factory liquidity by subtracting onluy tarcked liquidity
-  pangolin.totalLiquidityETH = pangolin.totalLiquidityETH.minus(pair.trackedReserveETH as BigDecimal)
+  // reset factory liquidity by subtracting only tracked liquidity
+  pangolin.totalLiquidityETH = pangolin.totalLiquidityETH.minus(pair.trackedReserveETH)
 
   // reset token total liquidity amounts
   token0.totalLiquidity = token0.totalLiquidity.minus(pair.reserve0)
@@ -399,29 +399,26 @@ export function handleSync(event: Sync): void {
   bundle.save()
 
   token0.derivedETH = findEthPerToken(token0 as Token)
+  token0.derivedUSD = token0.derivedETH.times(bundle.ethPrice)
   token1.derivedETH = findEthPerToken(token1 as Token)
-  token0.save()
-  token1.save()
+  token1.derivedUSD = token1.derivedETH.times(bundle.ethPrice)
+  // token0.save() // Not required to save since nothing loads token0 before save() at end of this method
+  // token1.save() // Not required to save since nothing loads token1 before save() at end of this method
 
   // get tracked liquidity - will be 0 if neither is in whitelist
-  let trackedLiquidityETH: BigDecimal
   if (bundle.ethPrice.notEqual(ZERO_BD)) {
-    trackedLiquidityETH = getTrackedLiquidityUSD(pair.reserve0, token0 as Token, pair.reserve1, token1 as Token).div(
-      bundle.ethPrice
-    )
-  } else {
-    trackedLiquidityETH = ZERO_BD
+    pair.trackedReserveUSD = getTrackedLiquidityUSD(pair.reserve0, token0 as Token, pair.reserve1, token1 as Token, bundle.ethPrice)
+    pair.trackedReserveETH = pair.trackedReserveUSD.div(bundle.ethPrice)
   }
 
   // use derived amounts within pair
-  pair.trackedReserveETH = trackedLiquidityETH
   pair.reserveETH = pair.reserve0
     .times(token0.derivedETH as BigDecimal)
     .plus(pair.reserve1.times(token1.derivedETH as BigDecimal))
   pair.reserveUSD = pair.reserveETH.times(bundle.ethPrice)
 
   // use tracked amounts globally
-  pangolin.totalLiquidityETH = pangolin.totalLiquidityETH.plus(trackedLiquidityETH)
+  pangolin.totalLiquidityETH = pangolin.totalLiquidityETH.plus(pair.trackedReserveETH)
   pangolin.totalLiquidityUSD = pangolin.totalLiquidityETH.times(bundle.ethPrice)
 
   // now correctly set liquidity amounts for each token
