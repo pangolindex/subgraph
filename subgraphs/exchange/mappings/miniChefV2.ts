@@ -20,9 +20,7 @@ export function handleDeposit(event: Deposit): void {
   createUser(event.params.to)
 
   if (event.params.user.notEqual(event.params.to)) {
-    let chef = event.address.toHexString()
-    let pid = event.params.pid.toHexString()
-    let farmKey = `${chef}-${pid}`
+    let farmKey = event.address.toHexString() + '-' + event.params.pid.toHexString()
     let farm = Farm.load(farmKey)
 
     let convertedAmount = convertTokenToDecimal(event.params.amount, BI_18)
@@ -44,9 +42,7 @@ export function handleWithdraw(event: Withdraw): void {
   createUser(event.params.to)
 
   if (event.params.user.notEqual(event.params.to)) {
-    let chef = event.address.toHexString()
-    let pid = event.params.pid.toHexString()
-    let farmKey = `${chef}-${pid}`
+    let farmKey = event.address.toHexString() + '-' + event.params.pid.toHexString()
     let farm = Farm.load(farmKey)
 
     let convertedAmount = convertTokenToDecimal(event.params.amount, BI_18)

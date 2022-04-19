@@ -139,7 +139,7 @@ export function createUser(address: Address): void {
 }
 
 export function createFarm(chef: Address, pid: BigInt, pair: Address): void {
-  let farmKey = `${chef.toHexString()}-${pid.toHexString()}`
+  let farmKey = chef.toHexString() + '-' + pid.toHexString()
   let farm = Farm.load(farmKey)
   if (farm === null) {
     farm = new Farm(farmKey)
