@@ -271,19 +271,18 @@ export function createUpdateFarmRewards(
   farmKey: string,
   overwrite: boolean = false
 ): void {
-  log.info(
-    "===================createReward====" + rewarderAddress.toHexString(),
-    []
-  );
+  log.info("===================createReward {}", [
+    rewarderAddress.toHexString(),
+  ]);
 
-  log.info("===================createReward=== farmKey====" + farmKey, []);
+  log.info("===================createReward farmKey==== {}", [farmKey]);
 
   let farm = Farm.load(farmKey);
 
-  log.info("===================createReward=== fard id====" + farm.id, []);
+  log.info("===================createReward fard id==== {}", [farm.id]);
 
   if (!!farm) {
-    log.info("XXXXXXXXXXXXXXXXXXXfarmloaded====", []);
+    log.info("===================createReward farm loaded", []);
 
     // create default reward only if we creating farm rewards
     if (!overwrite) {
@@ -294,10 +293,9 @@ export function createUpdateFarmRewards(
         "-" +
         farm.pid.toString();
       let defaultToken = Token.load(PNG_ADDRESS);
-      log.info(
-        "===================defaultRewardKey====" + defaultRewardKey,
-        []
-      );
+      log.info("===================defaultReward Key====,{}", [
+        defaultRewardKey,
+      ]);
       let defaultReward = new FarmReward(defaultRewardKey);
       defaultReward.token = defaultToken.id;
       defaultReward.multiplier = ONE_BI;
@@ -310,20 +308,24 @@ export function createUpdateFarmRewards(
 
     log.info("===================Before IF Condition====", []);
     if (rewarderAddress.toHexString() != ADDRESS_ZERO) {
-      log.info("===================IF Condition====", []);
+      log.info("===================extra reward found===={}", [
+        rewarderAddress.toHexString(),
+      ]);
       let rewardTokens = fetchRewardTokens(rewarderAddress);
       let multipliers = fetchRewardMultipliers(rewarderAddress);
 
       if (overwrite) {
-        log.info("===================overwrite", []);
+        log.info("===================extra reward overwrite===={}", [
+          farm.pid.toHexString(),
+        ]);
 
-        if (Array.isArray(farm.rewards)) {
-          for (let index = 0; index < farm.rewards.length; index++) {
-            let rewardData = farm.rewards;
-            let rewardId = rewardData[index];
-            store.remove("FarmReward", rewardId);
-          }
-        }
+        // if (Array.isArray(farm.rewards)) {
+        //   for (let index = 0; index < farm.rewards.length; index++) {
+        //     let rewardData = farm.rewards;
+        //     let rewardId = rewardData[index];
+        //     store.remove("FarmReward", rewardId);
+        //   }
+        // }
 
         let defaultToken = Token.load(PNG_ADDRESS);
         let defaultRewardKey =
@@ -344,7 +346,7 @@ export function createUpdateFarmRewards(
           let rewarderAddrKey = rewarderAddress.toHexString();
           let rewardTokensKey = rewardTokens[i].toHexString();
           let token = Token.load(rewardTokensKey);
-          log.info("===================rewardTokensKey:{}", [
+          log.info("===================extra reward rewardTokensKey:{}", [
             rewardTokens[i].toHexString(),
           ]);
 
@@ -355,7 +357,7 @@ export function createUpdateFarmRewards(
             "-" +
             BigInt.fromI32(i).toString();
 
-          log.info("===================rewardKey:{}", [rewardKey]);
+          log.info("===================extra reward rewardKey:{}", [rewardKey]);
 
           let reward = new FarmReward(rewardKey);
 
