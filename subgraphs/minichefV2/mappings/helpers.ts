@@ -5,6 +5,7 @@ import {
   Address,
   EthereumEvent,
   log,
+  store,
 } from "@graphprotocol/graph-ts";
 import { ERC20 } from "../generated/Factory/ERC20";
 import { ERC20SymbolBytes } from "../generated/Factory/ERC20SymbolBytes";
@@ -135,24 +136,44 @@ export function fetchTokenDecimals(tokenAddress: Address): BigInt {
 }
 
 export function fetchRewardTokens(rewarderAddress: Address): Array<Address> {
+  log.info("===================fetchRewardTokens:  rewarderAddress:{}", [
+    rewarderAddress.toHexString(),
+  ]);
+
   let contract = RewarderViaMultiplier.bind(rewarderAddress);
   let totalRewardTokenValue = [] as Array<Address>;
   let totalRewardTokenResult = contract.try_getRewardTokens();
+
+  log.info("====totalRewardTokenValue", []);
+
   if (!totalRewardTokenResult.reverted) {
-    totalRewardTokenValue = totalRewardTokenResult.value as Array<Address>;
+    totalRewardTokenValue = totalRewardTokenResult.value;
   }
+  log.info(
+    "#######===totalRewardTokenValue================= {}==============",
+    [totalRewardTokenValue[0].toHexString()]
+  );
   return totalRewardTokenValue;
 }
 
 export function fetchRewardMultipliers(
   rewarderAddress: Address
 ): Array<BigInt> {
+  log.info("===================fetchRewardMultipliers:  rewarderAddress:{}", [
+    rewarderAddress.toHexString(),
+  ]);
+
   let contract = RewarderViaMultiplier.bind(rewarderAddress);
   let totalRewardMultiplierValue = [] as Array<BigInt>;
   let totalRewardMultiplierResult = contract.try_getRewardMultipliers();
   if (!totalRewardMultiplierResult.reverted) {
     totalRewardMultiplierValue = totalRewardMultiplierResult.value;
   }
+
+  log.info("====totalRewardMultiplierValue {}", [
+    totalRewardMultiplierValue[0].toString(),
+  ]);
+
   return totalRewardMultiplierValue as Array<BigInt>;
 }
 
@@ -264,67 +285,86 @@ export function createUpdateFarmRewards(
   if (!!farm) {
     log.info("XXXXXXXXXXXXXXXXXXXfarmloaded====", []);
 
-    let defaultRewardKey =rewarderAddress.toHexString() +"-" +PNG_ADDRESS +"-" +ZERO_BI.toString();
+    // create default reward only if we creating farm rewards
+    if (!overwrite) {
+      let defaultRewardKey =
+        rewarderAddress.toHexString() +
+        "-" +
+        PNG_ADDRESS +
+        "-" +
+        ZERO_BI.toString();
+      let defaultToken = Token.load(PNG_ADDRESS);
+      log.info(
+        "===================defaultRewardKey====" + defaultRewardKey,
+        []
+      );
+      let defaultReward = new FarmReward(defaultRewardKey);
+      defaultReward.token = defaultToken.id;
+      defaultReward.multiplier = ONE_BI;
+      defaultReward.farm = farm.id;
+      defaultReward.save();
+      log.info("===================defaultReward saved===={}", [
+        defaultRewardKey,
+      ]);
+    }
 
-    log.info("===================defaultRewardKey====" + defaultRewardKey, []);
-
-    let reward = new FarmReward(defaultRewardKey);
-
-    reward.token = PNG_ADDRESS;
-    reward.multiplier = ONE_BI;
-    reward.farm = farm.id;
-
-    log.info("===================farm saved====", []);
-
-    reward.save();
-
+    log.info("===================Before IF Condition====", []);
     if (rewarderAddress.toHexString() != ADDRESS_ZERO) {
+      log.info("===================IF Condition====", []);
       let rewardTokens = fetchRewardTokens(rewarderAddress);
       let multipliers = fetchRewardMultipliers(rewarderAddress);
 
-      log.info("===================farm rewards==== {}", farm.rewards || []);
-
-      if (farm.rewards !== null && overwrite) {
+      if (overwrite) {
         log.info("===================overwrite", []);
 
-        for (let index = 0; index < farm.rewards.length + 1; index++) {
+        for (let index = 0; index < farm.rewards.length; index++) {
           let rewardData = farm.rewards;
           let rewardId = rewardData[index];
-
-          let farmReward = FarmReward.load(rewardId.toString());
-          farmReward.unset(rewardId.toString());
+          store.remove("FarmReward", rewardId);
         }
-      }
 
-      let defaultRewardKey =rewarderAddress.toHexString() +"-" +PNG_ADDRESS +"-" +ZERO_BI.toString();
-      let reward = new FarmReward(defaultRewardKey);
-
-      reward.token = PNG_ADDRESS;
-      reward.multiplier = ONE_BI;
-      reward.farm = farm.id;
-      reward.save();
-
-      for (let i = 0; i < rewardTokens.length; ++i) {
-        let rewarderAddrKey = rewarderAddress.toHexString();
-        let rewardTokensKey = rewardTokens[i].toHexString();
-
-        log.info("===================rewardTokensKey:{}", [
-          rewardTokens[i].toHexString(),
-        ]);
-
-        let index = i + 1;
-        let rewardKey =rewarderAddrKey + "-" +rewardTokensKey + "-" +BigInt.fromI32(index).toString();
-
-        log.info("===================rewardKey:{}", [rewardKey]);
-
-        let reward = new FarmReward(rewardKey);
-
-        let multiplier = multipliers[i];
-
-        reward.token = rewardTokens[i].toHexString();
-        reward.multiplier = multiplier;
+        let defaultToken = Token.load(PNG_ADDRESS);
+        let defaultRewardKey =
+          rewarderAddress.toHexString() +
+          "-" +
+          PNG_ADDRESS +
+          "-" +
+          ZERO_BI.toString();
+        let reward = new FarmReward(defaultRewardKey);
+        reward.token = defaultToken.id;
+        reward.multiplier = ONE_BI;
         reward.farm = farm.id;
         reward.save();
+      }
+
+      if (Array.isArray(rewardTokens)) {
+        for (let i = 0; i < rewardTokens.length; ++i) {
+          let rewarderAddrKey = rewarderAddress.toHexString();
+          let rewardTokensKey = rewardTokens[i].toHexString();
+          let token = Token.load(rewardTokensKey);
+          log.info("===================rewardTokensKey:{}", [
+            rewardTokens[i].toHexString(),
+          ]);
+
+          let j = i + 1;
+          let rewardKey =
+            rewarderAddrKey +
+            "-" +
+            rewardTokensKey +
+            "-" +
+            BigInt.fromI32(j).toString();
+
+          log.info("===================rewardKey:{}", [rewardKey]);
+
+          let reward = new FarmReward(rewardKey);
+
+          let multiplier = multipliers[i];
+
+          reward.token = token.id;
+          reward.multiplier = multiplier;
+          reward.farm = farm.id;
+          reward.save();
+        }
       }
     }
   } else {
