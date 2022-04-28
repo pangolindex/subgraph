@@ -292,7 +292,7 @@ export function createUpdateFarmRewards(
         "-" +
         PNG_ADDRESS +
         "-" +
-        ZERO_BI.toString();
+        farm.pid.toString();
       let defaultToken = Token.load(PNG_ADDRESS);
       log.info(
         "===================defaultRewardKey====" + defaultRewardKey,
@@ -317,10 +317,12 @@ export function createUpdateFarmRewards(
       if (overwrite) {
         log.info("===================overwrite", []);
 
-        for (let index = 0; index < farm.rewards.length; index++) {
-          let rewardData = farm.rewards;
-          let rewardId = rewardData[index];
-          store.remove("FarmReward", rewardId);
+        if (Array.isArray(farm.rewards)) {
+          for (let index = 0; index < farm.rewards.length; index++) {
+            let rewardData = farm.rewards;
+            let rewardId = rewardData[index];
+            store.remove("FarmReward", rewardId);
+          }
         }
 
         let defaultToken = Token.load(PNG_ADDRESS);
@@ -329,7 +331,7 @@ export function createUpdateFarmRewards(
           "-" +
           PNG_ADDRESS +
           "-" +
-          ZERO_BI.toString();
+          farm.pid.toString();
         let reward = new FarmReward(defaultRewardKey);
         reward.token = defaultToken.id;
         reward.multiplier = ONE_BI;
@@ -346,13 +348,12 @@ export function createUpdateFarmRewards(
             rewardTokens[i].toHexString(),
           ]);
 
-          let j = i + 1;
           let rewardKey =
             rewarderAddrKey +
             "-" +
             rewardTokensKey +
             "-" +
-            BigInt.fromI32(j).toString();
+            BigInt.fromI32(i).toString();
 
           log.info("===================rewardKey:{}", [rewardKey]);
 
