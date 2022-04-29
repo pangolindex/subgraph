@@ -10,6 +10,8 @@ import {
   createFarm,
   createUpdateFarmRewards,
   ZERO_BI,
+  createUpdateReWarder,
+  createUpdateMiniChef,
 } from "./helpers";
 import {
   Deposit,
@@ -188,35 +190,22 @@ export function handlePoolSet(event: PoolSet): void {
 
     // if we want to overwrite then update rewarder in farm
     if (overwrite) {
-      let farmRewarder = FarmRewarder.load(rewarderId);
-      if (farmRewarder === null) {
-        farmRewarder = new FarmRewarder(rewarderId);
-        farmRewarder.farm = farmKey;
-      }
+      createUpdateReWarder(rewarderId, farmKey);
       farm.rewarder = rewarderId;
-      farmRewarder.save();
     }
 
     farm.save();
 
     let minichef = Minichef.load(minichefKey);
+    let totalAllocPoint = ZERO_BI;
 
-    if (minichef !== null && farm.allocPoint !== null) {
-      minichef.totalAllocPoint = minichef.totalAllocPoint.plus(
+    if (minichef !== null) {
+      totalAllocPoint = minichef.totalAllocPoint.plus(
         allocPoint.minus(farm.allocPoint)
       );
-      minichef.save();
-    } else {
-      let minichef = new Minichef(minichefKey);
-      if (farm.allocPoint !== null) {
-        minichef.totalAllocPoint = minichef.totalAllocPoint.plus(
-          allocPoint.minus(farm.allocPoint)
-        );
-        minichef.rewardsExpiration = ZERO_BI;
-        minichef.rewardPerSecond = ZERO_BI;
-        minichef.save();
-      }
     }
+
+    createUpdateMiniChef(minichefKey, ZERO_BI, totalAllocPoint, ZERO_BI);
   }
 
   createUpdateFarmRewards(rewarder, pid, rewarderId);
@@ -229,20 +218,12 @@ export function handleLogRewardPerSecond(event: LogRewardPerSecond): void {
     []
   );
 
-  let minichefKey = event.address.toHexString();
-
-  let minichef = Minichef.load(minichefKey);
-
-  if (minichef !== null) {
-    minichef.rewardPerSecond = event.params.rewardPerSecond;
-    minichef.save();
-  } else {
-    let minichef = new Minichef(minichefKey);
-    minichef.rewardPerSecond = event.params.rewardPerSecond;
-    minichef.totalAllocPoint = ZERO_BI;
-    minichef.rewardsExpiration = ZERO_BI;
-    minichef.save();
-  }
+  createUpdateMiniChef(
+    event.address.toHexString(),
+    ZERO_BI,
+    ZERO_BI,
+    event.params.rewardPerSecond
+  );
 }
 
 export function handleLogRewardsExpiration(event: LogRewardsExpiration): void {
@@ -252,18 +233,10 @@ export function handleLogRewardsExpiration(event: LogRewardsExpiration): void {
     []
   );
 
-  let minichefKey = event.address.toHexString();
-
-  let minichef = Minichef.load(minichefKey);
-
-  if (minichef !== null) {
-    minichef.rewardsExpiration = event.params.rewardsExpiration;
-    minichef.save();
-  } else {
-    let minichef = new Minichef(minichefKey);
-    minichef.rewardsExpiration = event.params.rewardsExpiration;
-    minichef.totalAllocPoint = ZERO_BI;
-    minichef.rewardPerSecond = ZERO_BI;
-    minichef.save();
-  }
+  createUpdateMiniChef(
+    event.address.toHexString(),
+    event.params.rewardsExpiration,
+    ZERO_BI,
+    ZERO_BI
+  );
 }

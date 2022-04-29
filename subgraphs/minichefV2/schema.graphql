@@ -105,6 +105,7 @@ type Farm @entity {
   tvl: BigDecimal
   allocPoint: BigInt!
   rewarder: FarmRewarder!
+  minichef: Minichef!
 }
 
 type FarmRewarder @entity {
@@ -125,6 +126,7 @@ type Minichef @entity {
   totalAllocPoint: BigInt
   rewardPerSecond: BigInt
   rewardsExpiration: BigInt
+  farms: [Farm!]! @derivedFrom(field: "minichef")
 }
 
 type User @entity {

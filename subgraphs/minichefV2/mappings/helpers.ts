@@ -209,6 +209,65 @@ export function createUser(address: Address): void {
   }
 }
 
+export function createUpdateReWarder(
+  rewarderId: string,
+  farmKey: string
+): void {
+  let farmRewarder = FarmRewarder.load(rewarderId);
+  if (farmRewarder === null) {
+    farmRewarder = new FarmRewarder(rewarderId);
+    farmRewarder.farm = farmKey;
+  }
+
+  farmRewarder.save();
+}
+
+export function createUpdateMiniChef(
+  minichefKey: string,
+  rewardsExpiration: BigInt = ZERO_BI,
+  totalAllocPoint: BigInt = ZERO_BI,
+  rewardPerSecond: BigInt = ZERO_BI
+): void {
+  let minichef = Minichef.load(minichefKey);
+
+  if (minichef !== null) {
+    if (rewardsExpiration !== ZERO_BI) {
+      minichef.rewardsExpiration = rewardsExpiration;
+    }
+
+    if (totalAllocPoint !== ZERO_BI) {
+      minichef.totalAllocPoint = totalAllocPoint;
+    }
+
+    if (rewardPerSecond !== ZERO_BI) {
+      minichef.rewardPerSecond = rewardPerSecond;
+    }
+
+    minichef.save();
+  } else {
+    let minichef = new Minichef(minichefKey);
+    minichef.rewardsExpiration = rewardsExpiration;
+    minichef.totalAllocPoint = totalAllocPoint;
+    minichef.rewardPerSecond = rewardPerSecond;
+    minichef.save();
+  }
+}
+
+export function createFarmReward(
+  rewardKey: string,
+  tokenAddress: string,
+  multiplier: BigInt,
+  rewarderId: string
+): void {
+  let token = Token.load(tokenAddress);
+
+  let reward = new FarmReward(rewardKey);
+  reward.token = token.id;
+  reward.multiplier = multiplier;
+  reward.rewarder = rewarderId;
+  reward.save();
+}
+
 export function createFarm(
   chef: Address,
   pid: BigInt,
@@ -229,17 +288,13 @@ export function createFarm(
   let minichefKey = chef.toHexString();
 
   let minichef = Minichef.load(minichefKey);
-
+  let totalAllocPoint = ZERO_BI;
   if (minichef !== null) {
-    minichef.totalAllocPoint = minichef.totalAllocPoint.plus(allocPoint);
-    minichef.save();
+    totalAllocPoint = minichef.totalAllocPoint.plus(allocPoint);
   } else {
-    let minichef = new Minichef(minichefKey);
-    minichef.totalAllocPoint = ZERO_BI.plus(allocPoint);
-    minichef.rewardsExpiration = ZERO_BI;
-    minichef.rewardPerSecond = ZERO_BI;
-    minichef.save();
+    totalAllocPoint = totalAllocPoint.plus(allocPoint);
   }
+  createUpdateMiniChef(minichefKey, ZERO_BI, totalAllocPoint, ZERO_BI);
 
   let farmKey = chef.toHexString() + "-" + pid.toHexString();
   let rewarderId = rewarderAddress.toHexString() + "-" + pid.toHexString();
@@ -253,6 +308,7 @@ export function createFarm(
     farm.tvl = ZERO_BD;
     farm.allocPoint = allocPoint;
     farm.rewarder = rewarderId;
+    farm.minichef = minichefKey;
 
     let pairData = Pair.load(pair.toHexString());
 
@@ -262,13 +318,7 @@ export function createFarm(
 
     farm.save();
 
-    let farmRewarder = FarmRewarder.load(rewarderId);
-    if (farmRewarder === null) {
-      farmRewarder = new FarmRewarder(rewarderId);
-      farmRewarder.farm = farmKey;
-    }
-
-    farmRewarder.save();
+    createUpdateReWarder(rewarderId, farmKey);
 
     // fetch info if null
     if (rewarderAddress !== null) {
@@ -298,16 +348,12 @@ export function createUpdateFarmRewards(
     // create default reward only if we creating farm rewards
     let defaultRewardKey =
       rewarderAddress.toHexString() + "-" + PNG_ADDRESS + "-" + pid.toString();
-    let defaultToken = Token.load(PNG_ADDRESS);
-    log.info("===================defaultReward Key====,{}", [defaultRewardKey]);
-    let defaultReward = new FarmReward(defaultRewardKey);
-    defaultReward.token = defaultToken.id;
-    defaultReward.multiplier = ONE_BI;
-    defaultReward.rewarder = rewarderId;
-    defaultReward.save();
+
     log.info("===================defaultReward saved===={}", [
       defaultRewardKey,
     ]);
+
+    createFarmReward(defaultRewardKey, PNG_ADDRESS, ONE_BI, rewarderId);
 
     log.info("===================Before IF Condition====", []);
     if (rewarderAddress.toHexString() != ADDRESS_ZERO) {
@@ -321,7 +367,7 @@ export function createUpdateFarmRewards(
         for (let i = 0; i < rewardTokens.length; ++i) {
           let rewarderAddrKey = rewarderAddress.toHexString();
           let rewardTokensKey = rewardTokens[i].toHexString();
-          let token = Token.load(rewardTokensKey);
+
           log.info("===================extra reward rewardTokensKey:{}", [
             rewardTokens[i].toHexString(),
           ]);
@@ -334,15 +380,8 @@ export function createUpdateFarmRewards(
             BigInt.fromI32(i).toString();
 
           log.info("===================extra reward rewardKey:{}", [rewardKey]);
-
-          let reward = new FarmReward(rewardKey);
-
           let multiplier = multipliers[i];
-
-          reward.token = token.id;
-          reward.multiplier = multiplier;
-          reward.rewarder = rewarderId;
-          reward.save();
+          createFarmReward(rewardKey, rewardTokensKey, multiplier, rewarderId);
         }
       }
     }
