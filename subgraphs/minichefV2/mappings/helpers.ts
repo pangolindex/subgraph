@@ -21,6 +21,7 @@ import {
   Pair,
   FarmReward,
   Minichef,
+  FarmRewarder,
 } from "../generated/schema";
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
@@ -241,6 +242,7 @@ export function createFarm(
   }
 
   let farmKey = chef.toHexString() + "-" + pid.toHexString();
+  let rewarderId = rewarderAddress.toHexString() + "-" + pid.toHexString();
   let farm = Farm.load(farmKey);
   if (farm === null) {
     farm = new Farm(farmKey);
@@ -250,6 +252,7 @@ export function createFarm(
     farm.rewarderAddress = rewarderAddress;
     farm.tvl = ZERO_BD;
     farm.allocPoint = allocPoint;
+    farm.rewarder = rewarderId;
 
     let pairData = Pair.load(pair.toHexString());
 
@@ -259,52 +262,52 @@ export function createFarm(
 
     farm.save();
 
+    let farmRewarder = FarmRewarder.load(rewarderId);
+    if (farmRewarder === null) {
+      farmRewarder = new FarmRewarder(rewarderId);
+      farmRewarder.farm = farmKey;
+    }
+
+    farmRewarder.save();
+
     // fetch info if null
     if (rewarderAddress !== null) {
-      createUpdateFarmRewards(rewarderAddress, farmKey);
+      createUpdateFarmRewards(rewarderAddress, pid, rewarderId);
     }
   }
 }
 
 export function createUpdateFarmRewards(
   rewarderAddress: Address,
-  farmKey: string,
-  overwrite: boolean = false
+  pid: BigInt,
+  rewarderId: string
 ): void {
   log.info("===================createReward {}", [
     rewarderAddress.toHexString(),
   ]);
 
-  log.info("===================createReward farmKey==== {}", [farmKey]);
+  let farmRewarder = FarmRewarder.load(rewarderId);
 
-  let farm = Farm.load(farmKey);
+  log.info("===================createReward farmRewarder id==== {}", [
+    farmRewarder.id,
+  ]);
 
-  log.info("===================createReward fard id==== {}", [farm.id]);
-
-  if (!!farm) {
+  if (!!farmRewarder) {
     log.info("===================createReward farm loaded", []);
 
     // create default reward only if we creating farm rewards
-    if (!overwrite) {
-      let defaultRewardKey =
-        rewarderAddress.toHexString() +
-        "-" +
-        PNG_ADDRESS +
-        "-" +
-        farm.pid.toString();
-      let defaultToken = Token.load(PNG_ADDRESS);
-      log.info("===================defaultReward Key====,{}", [
-        defaultRewardKey,
-      ]);
-      let defaultReward = new FarmReward(defaultRewardKey);
-      defaultReward.token = defaultToken.id;
-      defaultReward.multiplier = ONE_BI;
-      defaultReward.farm = farm.id;
-      defaultReward.save();
-      log.info("===================defaultReward saved===={}", [
-        defaultRewardKey,
-      ]);
-    }
+    let defaultRewardKey =
+      rewarderAddress.toHexString() + "-" + PNG_ADDRESS + "-" + pid.toString();
+    let defaultToken = Token.load(PNG_ADDRESS);
+    log.info("===================defaultReward Key====,{}", [defaultRewardKey]);
+    let defaultReward = new FarmReward(defaultRewardKey);
+    defaultReward.token = defaultToken.id;
+    defaultReward.multiplier = ONE_BI;
+    defaultReward.rewarder = rewarderId;
+    defaultReward.save();
+    log.info("===================defaultReward saved===={}", [
+      defaultRewardKey,
+    ]);
 
     log.info("===================Before IF Condition====", []);
     if (rewarderAddress.toHexString() != ADDRESS_ZERO) {
@@ -313,33 +316,6 @@ export function createUpdateFarmRewards(
       ]);
       let rewardTokens = fetchRewardTokens(rewarderAddress);
       let multipliers = fetchRewardMultipliers(rewarderAddress);
-
-      if (overwrite) {
-        log.info("===================extra reward overwrite===={}", [
-          farm.pid.toHexString(),
-        ]);
-
-        // if (Array.isArray(farm.rewards)) {
-        //   for (let index = 0; index < farm.rewards.length; index++) {
-        //     let rewardData = farm.rewards;
-        //     let rewardId = rewardData[index];
-        //     store.remove("FarmReward", rewardId);
-        //   }
-        // }
-
-        let defaultToken = Token.load(PNG_ADDRESS);
-        let defaultRewardKey =
-          rewarderAddress.toHexString() +
-          "-" +
-          PNG_ADDRESS +
-          "-" +
-          farm.pid.toString();
-        let reward = new FarmReward(defaultRewardKey);
-        reward.token = defaultToken.id;
-        reward.multiplier = ONE_BI;
-        reward.farm = farm.id;
-        reward.save();
-      }
 
       if (Array.isArray(rewardTokens)) {
         for (let i = 0; i < rewardTokens.length; ++i) {
@@ -365,7 +341,7 @@ export function createUpdateFarmRewards(
 
           reward.token = token.id;
           reward.multiplier = multiplier;
-          reward.farm = farm.id;
+          reward.rewarder = rewarderId;
           reward.save();
         }
       }

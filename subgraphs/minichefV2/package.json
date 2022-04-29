@@ -5,12 +5,12 @@
   "license": "GPL-3.0-or-later",
   "scripts": {
     "codegen": "graph codegen",
-    "create-local": "graph create sarjuhansaliya/minichef-dummy --node http://127.0.0.1:8020",
-    "remove-local": "graph remove sarjuhansaliya/minichef-dummy --node http://127.0.0.1:8020",
-    "deploy-local": "graph deploy sarjuhansaliya/minichef-dummy --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
+    "create-local": "graph create sarjuhansaliya/minichef-dummy --node http://127.0.0.1:8020 --access-token $GRAPH_ACCESS_TOKEN",
+    "remove-local": "graph remove sarjuhansaliya/minichef-dummy --node http://127.0.0.1:8020 --access-token $GRAPH_ACCESS_TOKEN",
+    "deploy-local": "graph deploy sarjuhansaliya/minichef-dummy --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020 --access-token $GRAPH_ACCESS_TOKEN",
     "build": "graph build",
-    "deploy": "graph deploy pangolindex/exchange --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug --access-token $GRAPH_ACCESS_TOKEN",
-    "deploy-staging": "graph deploy pangolindex/exchange-staging --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug --access-token $GRAPH_ACCESS_TOKEN"
+    "deploy": "graph deploy pangolindex/minichefv2 --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug --access-token $GRAPH_ACCESS_TOKEN",
+    "deploy-staging": "graph deploy sarjuhansaliya/minichefv2-dummy --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug --access-token $GRAPH_ACCESS_TOKEN"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "0.16.2",

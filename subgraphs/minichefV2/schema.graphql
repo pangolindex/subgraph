@@ -104,13 +104,18 @@ type Farm @entity {
   rewarderAddress: Bytes
   tvl: BigDecimal
   allocPoint: BigInt!
-  rewards: [FarmReward!]! @derivedFrom(field: "farm")
+  rewarder: FarmRewarder!
+}
+
+type FarmRewarder @entity {
+  id: ID!
+  farm: Farm!
+  rewards: [FarmReward!]! @derivedFrom(field: "rewarder")
 }
 
 type FarmReward @entity {
   id: ID!
-  rewarderAddress: Bytes
-  farm: Farm!
+  rewarder: FarmRewarder
   token: Token!
   multiplier: BigInt
 }

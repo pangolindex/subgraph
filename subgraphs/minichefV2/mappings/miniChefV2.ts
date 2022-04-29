@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import { Address, log } from "@graphprotocol/graph-ts";
-import { Farm, Minichef } from "../generated/schema";
+import { Farm, FarmRewarder, Minichef } from "../generated/schema";
 import {
   convertTokenToDecimal,
   createUser,
@@ -173,29 +173,45 @@ export function handleEmergencyWithdraw(event: EmergencyWithdraw): void {
 export function handlePoolSet(event: PoolSet): void {
   log.info("============== handlePoolSet =======", []);
 
-  let farmKey =
-    event.address.toHexString() + "-" + event.params.pid.toHexString();
+  let allocPoint = event.params.allocPoint;
+  let overwrite = event.params.overwrite;
+  let pid = event.params.pid;
+  let rewarder = event.params.rewarder;
+  let minichefKey = event.address.toHexString();
+  let farmKey = minichefKey + "-" + pid.toHexString();
+  let rewarderId = rewarder.toHexString() + "-" + pid.toHexString();
 
   let farm = Farm.load(farmKey);
 
-  let allocPoint = event.params.allocPoint
-
-  if (farm !== null && allocPoint !== null) {
+  if (farm !== null) {
     farm.allocPoint = allocPoint;
-    farm.save();
 
-    let minichefKey = event.address.toHexString();
+    // if we want to overwrite then update rewarder in farm
+    if (overwrite) {
+      let farmRewarder = FarmRewarder.load(rewarderId);
+      if (farmRewarder === null) {
+        farmRewarder = new FarmRewarder(rewarderId);
+        farmRewarder.farm = farmKey;
+      }
+      farm.rewarder = rewarderId;
+      farmRewarder.save();
+    }
+
+    farm.save();
 
     let minichef = Minichef.load(minichefKey);
 
     if (minichef !== null && farm.allocPoint !== null) {
-      minichef.totalAllocPoint = minichef.totalAllocPoint.plus(allocPoint.minus(farm.allocPoint));
+      minichef.totalAllocPoint = minichef.totalAllocPoint.plus(
+        allocPoint.minus(farm.allocPoint)
+      );
       minichef.save();
     } else {
       let minichef = new Minichef(minichefKey);
-      if(farm.allocPoint !== null) 
-      {
-        minichef.totalAllocPoint = minichef.totalAllocPoint.plus(allocPoint.minus(farm.allocPoint));
+      if (farm.allocPoint !== null) {
+        minichef.totalAllocPoint = minichef.totalAllocPoint.plus(
+          allocPoint.minus(farm.allocPoint)
+        );
         minichef.rewardsExpiration = ZERO_BI;
         minichef.rewardPerSecond = ZERO_BI;
         minichef.save();
@@ -203,15 +219,15 @@ export function handlePoolSet(event: PoolSet): void {
     }
   }
 
-  createUpdateFarmRewards(
-    event.params.rewarder,
-    farmKey,
-    event.params.overwrite
-  );
+  createUpdateFarmRewards(rewarder, pid, rewarderId);
 }
 
 export function handleLogRewardPerSecond(event: LogRewardPerSecond): void {
-  log.info("============== handleLogRewardPerSecond ======="+event.params.rewardPerSecond.toString(),[]);
+  log.info(
+    "============== handleLogRewardPerSecond =======" +
+      event.params.rewardPerSecond.toString(),
+    []
+  );
 
   let minichefKey = event.address.toHexString();
 
@@ -230,7 +246,11 @@ export function handleLogRewardPerSecond(event: LogRewardPerSecond): void {
 }
 
 export function handleLogRewardsExpiration(event: LogRewardsExpiration): void {
-  log.info("============== handleLogRewardsExpiration ======="+event.params.rewardsExpiration.toString(),[]);
+  log.info(
+    "============== handleLogRewardsExpiration =======" +
+      event.params.rewardsExpiration.toString(),
+    []
+  );
 
   let minichefKey = event.address.toHexString();
 
