@@ -32,14 +32,6 @@ type Token @entity {
   # used for other stats like marketcap
   totalSupply: BigInt!
 
-  # token specific volume
-  tradeVolume: BigDecimal!
-  tradeVolumeUSD: BigDecimal!
-  untrackedVolumeUSD: BigDecimal!
-
-  # transactions across all pairs
-  txCount: BigInt!
-
   # liquidity across all pairs
   totalLiquidity: BigDecimal!
 
@@ -71,13 +63,6 @@ type Pair @entity {
   token0Price: BigDecimal!
   token1Price: BigDecimal!
 
-  # lifetime volume stats
-  volumeToken0: BigDecimal!
-  volumeToken1: BigDecimal!
-  volumeUSD: BigDecimal!
-  untrackedVolumeUSD: BigDecimal!
-  txCount: BigInt!
-
   # creation stats
   createdAtTimestamp: BigInt!
   createdAtBlockNumber: BigInt!
@@ -86,8 +71,6 @@ type Pair @entity {
   liquidityProviderCount: BigInt! # used to detect new exchanges
   # derived fields
   liquidityPositions: [LiquidityPosition!]! @derivedFrom(field: "pair")
-  liquidityPositionSnapshots: [LiquidityPositionSnapshot!]!
-    @derivedFrom(field: "pair")
 }
 
 type PairCache @entity {
@@ -140,23 +123,6 @@ type LiquidityPosition @entity {
   user: User!
   pair: Pair!
   liquidityTokenBalance: BigDecimal!
-}
-
-# saved over time for return calculations, gets created and never updated
-type LiquidityPositionSnapshot @entity {
-  id: ID!
-  liquidityPosition: LiquidityPosition!
-  timestamp: Int! # saved for fast historical lookups
-  block: Int! # saved for fast historical lookups
-  user: User! # reference to user
-  pair: Pair! # reference to pair
-  token0PriceUSD: BigDecimal! # snapshot of token0 price
-  token1PriceUSD: BigDecimal! # snapshot of token1 price
-  reserve0: BigDecimal! # snapshot of pair token0 reserves
-  reserve1: BigDecimal! # snapshot of pair token1 reserves
-  reserveUSD: BigDecimal! # snapshot of pair reserves in USD
-  liquidityTokenTotalSupply: BigDecimal! # snapshot of pool token supply
-  liquidityTokenBalance: BigDecimal! # snapshot of users pool token balance
 }
 
 # stores for USD calculations

@@ -62,12 +62,12 @@ export function handleNewPair(event: PairCreated): void {
     token0.decimals = decimals;
     token0.derivedETH = ZERO_BD;
     token0.derivedUSD = ZERO_BD;
-    token0.tradeVolume = ZERO_BD;
-    token0.tradeVolumeUSD = ZERO_BD;
-    token0.untrackedVolumeUSD = ZERO_BD;
+    // token0.tradeVolume = ZERO_BD;
+    // token0.tradeVolumeUSD = ZERO_BD;
+    // token0.untrackedVolumeUSD = ZERO_BD;
     token0.totalLiquidity = ZERO_BD;
     // token0.allPairs = []
-    token0.txCount = ZERO_BI;
+    // token0.txCount = ZERO_BI;
   }
 
   // fetch info if null
@@ -85,12 +85,12 @@ export function handleNewPair(event: PairCreated): void {
     token1.decimals = decimals;
     token1.derivedETH = ZERO_BD;
     token1.derivedUSD = ZERO_BD;
-    token1.tradeVolume = ZERO_BD;
-    token1.tradeVolumeUSD = ZERO_BD;
-    token1.untrackedVolumeUSD = ZERO_BD;
+    // token1.tradeVolume = ZERO_BD;
+    // token1.tradeVolumeUSD = ZERO_BD;
+    // token1.untrackedVolumeUSD = ZERO_BD;
     token1.totalLiquidity = ZERO_BD;
     // token1.allPairs = []
-    token1.txCount = ZERO_BI;
+    // token1.txCount = ZERO_BI;
   }
 
   let pair = new Pair(event.params.pair.toHexString()) as Pair;
@@ -99,7 +99,7 @@ export function handleNewPair(event: PairCreated): void {
   pair.liquidityProviderCount = ZERO_BI;
   pair.createdAtTimestamp = event.block.timestamp;
   pair.createdAtBlockNumber = event.block.number;
-  pair.txCount = ZERO_BI;
+  // pair.txCount = ZERO_BI;
   pair.reserve0 = ZERO_BD;
   pair.reserve1 = ZERO_BD;
   pair.trackedReserveETH = ZERO_BD;
@@ -107,10 +107,10 @@ export function handleNewPair(event: PairCreated): void {
   pair.reserveETH = ZERO_BD;
   pair.reserveUSD = ZERO_BD;
   pair.totalSupply = ZERO_BD;
-  pair.volumeToken0 = ZERO_BD;
-  pair.volumeToken1 = ZERO_BD;
-  pair.volumeUSD = ZERO_BD;
-  pair.untrackedVolumeUSD = ZERO_BD;
+  // pair.volumeToken0 = ZERO_BD;
+  // pair.volumeToken1 = ZERO_BD;
+  // pair.volumeUSD = ZERO_BD;
+  // pair.untrackedVolumeUSD = ZERO_BD;
   pair.token0Price = ZERO_BD;
   pair.token1Price = ZERO_BD;
 

@@ -17,7 +17,6 @@ import {
   Farm,
   Token,
   LiquidityPosition,
-  LiquidityPositionSnapshot,
   Pair,
   FarmReward,
   Minichef,
@@ -117,8 +116,10 @@ export function fetchTokenTotalSupply(tokenAddress: Address): BigInt {
   let totalSupplyValue = null;
   let totalSupplyResult = contract.try_totalSupply();
   if (!totalSupplyResult.reverted) {
+    // @ts-ignore
     totalSupplyValue = totalSupplyResult as i32;
   }
+  // @ts-ignore
   return BigInt.fromI32(totalSupplyValue as i32);
 }
 
@@ -133,6 +134,7 @@ export function fetchTokenDecimals(tokenAddress: Address): BigInt {
   if (!decimalResult.reverted) {
     decimalValue = decimalResult.value;
   }
+  // @ts-ignore
   return BigInt.fromI32(decimalValue as i32);
 }
 
@@ -388,35 +390,4 @@ export function createUpdateFarmRewards(
   } else {
     return;
   }
-}
-
-export function createLiquiditySnapshot(
-  position: LiquidityPosition,
-  event: EthereumEvent
-): void {
-  let timestamp = event.block.timestamp.toI32();
-  let bundle = Bundle.load("1");
-  let pair = Pair.load(position.pair);
-  let token0 = Token.load(pair.token0);
-  let token1 = Token.load(pair.token1);
-
-  // create new snapshot
-  let snapshot = new LiquidityPositionSnapshot(
-    position.id.concat(timestamp.toString())
-  );
-  snapshot.liquidityPosition = position.id;
-  snapshot.timestamp = timestamp;
-  snapshot.block = event.block.number.toI32();
-  snapshot.user = position.user;
-  snapshot.pair = position.pair;
-  snapshot.token0PriceUSD = token0.derivedETH.times(bundle.ethPrice);
-  snapshot.token1PriceUSD = token1.derivedETH.times(bundle.ethPrice);
-  snapshot.reserve0 = pair.reserve0;
-  snapshot.reserve1 = pair.reserve1;
-  snapshot.reserveUSD = pair.reserveUSD;
-  snapshot.liquidityTokenTotalSupply = pair.totalSupply;
-  snapshot.liquidityTokenBalance = position.liquidityTokenBalance;
-  snapshot.liquidityPosition = position.id;
-  snapshot.save();
-  position.save();
 }

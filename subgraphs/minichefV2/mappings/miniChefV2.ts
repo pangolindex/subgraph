@@ -6,7 +6,6 @@ import {
   createUser,
   BI_18,
   createLiquidityPosition,
-  createLiquiditySnapshot,
   createFarm,
   createUpdateFarmRewards,
   ZERO_BI,
@@ -70,8 +69,6 @@ export function handleDeposit(event: Deposit): void {
     );
     fromUserLiquidityPosition.save();
 
-    createLiquiditySnapshot(fromUserLiquidityPosition, event);
-
     let toUserLiquidityPosition = createLiquidityPosition(
       farm.pairAddress as Address,
       event.params.to
@@ -80,7 +77,6 @@ export function handleDeposit(event: Deposit): void {
       convertedAmount
     );
     toUserLiquidityPosition.save();
-    createLiquiditySnapshot(toUserLiquidityPosition, event);
   }
 }
 
@@ -121,8 +117,6 @@ export function handleWithdraw(event: Withdraw): void {
     );
     fromUserLiquidityPosition.save();
 
-    createLiquiditySnapshot(fromUserLiquidityPosition, event);
-
     let toUserLiquidityPosition = createLiquidityPosition(
       farm.pairAddress as Address,
       event.params.to
@@ -131,7 +125,6 @@ export function handleWithdraw(event: Withdraw): void {
       convertedAmount
     );
     toUserLiquidityPosition.save();
-    createLiquiditySnapshot(toUserLiquidityPosition, event);
   }
 }
 
@@ -158,8 +151,6 @@ export function handleEmergencyWithdraw(event: EmergencyWithdraw): void {
     farm.tvl = farm.tvl.minus(convertedAmount);
     farm.save();
 
-    createLiquiditySnapshot(fromUserLiquidityPosition, event);
-
     let toUserLiquidityPosition = createLiquidityPosition(
       farm.pairAddress as Address,
       event.params.to
@@ -168,7 +159,6 @@ export function handleEmergencyWithdraw(event: EmergencyWithdraw): void {
       convertedAmount
     );
     toUserLiquidityPosition.save();
-    createLiquiditySnapshot(toUserLiquidityPosition, event);
   }
 }
 
