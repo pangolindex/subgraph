@@ -182,7 +182,8 @@ export function fetchRewardMultipliers(
 
 export function createLiquidityPosition(
   exchange: Address,
-  user: Address
+  user: Address,
+  farmKey: string
 ): LiquidityPosition {
   let id = exchange
     .toHexString()
@@ -194,6 +195,7 @@ export function createLiquidityPosition(
     pair.liquidityProviderCount = pair.liquidityProviderCount.plus(ONE_BI);
     lp = new LiquidityPosition(id);
     lp.liquidityTokenBalance = ZERO_BD;
+    lp.farm = farmKey;
     lp.pairAddress = exchange;
     lp.pair = exchange.toHexString();
     lp.userAddress = user;

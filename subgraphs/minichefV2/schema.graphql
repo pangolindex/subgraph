@@ -69,8 +69,6 @@ type Pair @entity {
 
   # Fields used to help derived relationship
   liquidityProviderCount: BigInt! # used to detect new exchanges
-  # derived fields
-  liquidityPositions: [LiquidityPosition!]! @derivedFrom(field: "pair")
 }
 
 type PairCache @entity {
@@ -89,6 +87,9 @@ type Farm @entity {
   allocPoint: BigInt!
   rewarder: FarmRewarder!
   minichef: Minichef!
+
+  # derived fields
+  liquidityPositions: [LiquidityPosition!]! @derivedFrom(field: "farm")
 }
 
 type FarmRewarder @entity {
@@ -122,6 +123,7 @@ type LiquidityPosition @entity {
   id: ID!
   userAddress: Bytes!
   user: User!
+  farm: Farm!
   pairAddress: Bytes!
   pair: Pair!
   liquidityTokenBalance: BigDecimal!

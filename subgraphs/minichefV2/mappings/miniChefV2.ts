@@ -62,7 +62,8 @@ export function handleDeposit(event: Deposit): void {
   if (event.params.user.notEqual(event.params.to)) {
     let fromUserLiquidityPosition = createLiquidityPosition(
       farm.pairAddress as Address,
-      event.params.user
+      event.params.user,
+      farmKey
     );
     fromUserLiquidityPosition.liquidityTokenBalance = fromUserLiquidityPosition.liquidityTokenBalance.minus(
       convertedAmount
@@ -71,7 +72,8 @@ export function handleDeposit(event: Deposit): void {
 
     let toUserLiquidityPosition = createLiquidityPosition(
       farm.pairAddress as Address,
-      event.params.to
+      event.params.to,
+      farmKey
     );
     toUserLiquidityPosition.liquidityTokenBalance = toUserLiquidityPosition.liquidityTokenBalance.plus(
       convertedAmount
@@ -80,7 +82,8 @@ export function handleDeposit(event: Deposit): void {
   } else {
     let toUserLP = createLiquidityPosition(
       farm.pairAddress as Address,
-      event.params.to
+      event.params.to,
+      farmKey
     );
     toUserLP.liquidityTokenBalance = toUserLP.liquidityTokenBalance.plus(
       convertedAmount
@@ -119,7 +122,8 @@ export function handleWithdraw(event: Withdraw): void {
   if (event.params.user.notEqual(event.params.to)) {
     let fromUserLiquidityPosition = createLiquidityPosition(
       farm.pairAddress as Address,
-      event.params.user
+      event.params.user,
+      farmKey
     );
     fromUserLiquidityPosition.liquidityTokenBalance = fromUserLiquidityPosition.liquidityTokenBalance.minus(
       convertedAmount
@@ -128,7 +132,8 @@ export function handleWithdraw(event: Withdraw): void {
 
     let toUserLiquidityPosition = createLiquidityPosition(
       farm.pairAddress as Address,
-      event.params.to
+      event.params.to,
+      farmKey
     );
     toUserLiquidityPosition.liquidityTokenBalance = toUserLiquidityPosition.liquidityTokenBalance.plus(
       convertedAmount
@@ -137,7 +142,8 @@ export function handleWithdraw(event: Withdraw): void {
   } else {
     let toUserLP = createLiquidityPosition(
       farm.pairAddress as Address,
-      event.params.to
+      event.params.to,
+      farmKey
     );
     toUserLP.liquidityTokenBalance = toUserLP.liquidityTokenBalance.minus(
       convertedAmount
@@ -159,7 +165,8 @@ export function handleEmergencyWithdraw(event: EmergencyWithdraw): void {
   if (event.params.user.notEqual(event.params.to)) {
     let fromUserLiquidityPosition = createLiquidityPosition(
       farm.pairAddress as Address,
-      event.params.user
+      event.params.user,
+      farmKey
     );
     fromUserLiquidityPosition.liquidityTokenBalance = fromUserLiquidityPosition.liquidityTokenBalance.minus(
       convertedAmount
@@ -171,7 +178,8 @@ export function handleEmergencyWithdraw(event: EmergencyWithdraw): void {
 
     let toUserLiquidityPosition = createLiquidityPosition(
       farm.pairAddress as Address,
-      event.params.to
+      event.params.to,
+      farmKey
     );
     toUserLiquidityPosition.liquidityTokenBalance = toUserLiquidityPosition.liquidityTokenBalance.plus(
       convertedAmount
@@ -180,7 +188,8 @@ export function handleEmergencyWithdraw(event: EmergencyWithdraw): void {
   } else {
     let toUserLP = createLiquidityPosition(
       farm.pairAddress as Address,
-      event.params.to
+      event.params.to,
+      farmKey
     );
     toUserLP.liquidityTokenBalance = toUserLP.liquidityTokenBalance.minus(
       convertedAmount
