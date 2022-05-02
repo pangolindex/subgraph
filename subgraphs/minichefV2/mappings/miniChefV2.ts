@@ -77,6 +77,15 @@ export function handleDeposit(event: Deposit): void {
       convertedAmount
     );
     toUserLiquidityPosition.save();
+  } else {
+    let toUserLP = createLiquidityPosition(
+      farm.pairAddress as Address,
+      event.params.to
+    );
+    toUserLP.liquidityTokenBalance = toUserLP.liquidityTokenBalance.plus(
+      convertedAmount
+    );
+    toUserLP.save();
   }
 }
 
@@ -125,20 +134,29 @@ export function handleWithdraw(event: Withdraw): void {
       convertedAmount
     );
     toUserLiquidityPosition.save();
+  } else {
+    let toUserLP = createLiquidityPosition(
+      farm.pairAddress as Address,
+      event.params.to
+    );
+    toUserLP.liquidityTokenBalance = toUserLP.liquidityTokenBalance.minus(
+      convertedAmount
+    );
+    toUserLP.save();
   }
 }
 
 export function handleEmergencyWithdraw(event: EmergencyWithdraw): void {
+  let farmKey =
+    event.address.toHexString() + "-" + event.params.pid.toHexString();
+  let farm = Farm.load(farmKey);
+
+  let convertedAmount = convertTokenToDecimal(event.params.amount, BI_18);
+
   // user stats
   createUser(event.params.to);
 
   if (event.params.user.notEqual(event.params.to)) {
-    let farmKey =
-      event.address.toHexString() + "-" + event.params.pid.toHexString();
-    let farm = Farm.load(farmKey);
-
-    let convertedAmount = convertTokenToDecimal(event.params.amount, BI_18);
-
     let fromUserLiquidityPosition = createLiquidityPosition(
       farm.pairAddress as Address,
       event.params.user
@@ -159,6 +177,15 @@ export function handleEmergencyWithdraw(event: EmergencyWithdraw): void {
       convertedAmount
     );
     toUserLiquidityPosition.save();
+  } else {
+    let toUserLP = createLiquidityPosition(
+      farm.pairAddress as Address,
+      event.params.to
+    );
+    toUserLP.liquidityTokenBalance = toUserLP.liquidityTokenBalance.minus(
+      convertedAmount
+    );
+    toUserLP.save();
   }
 }
 

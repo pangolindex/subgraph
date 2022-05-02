@@ -188,18 +188,20 @@ export function createLiquidityPosition(
     .toHexString()
     .concat("-")
     .concat(user.toHexString());
-  let liquidityTokenBalance = LiquidityPosition.load(id);
-  if (liquidityTokenBalance === null) {
+  let lp = LiquidityPosition.load(id);
+  if (lp === null) {
     let pair = Pair.load(exchange.toHexString());
     pair.liquidityProviderCount = pair.liquidityProviderCount.plus(ONE_BI);
-    liquidityTokenBalance = new LiquidityPosition(id);
-    liquidityTokenBalance.liquidityTokenBalance = ZERO_BD;
-    liquidityTokenBalance.pair = exchange.toHexString();
-    liquidityTokenBalance.user = user.toHexString();
-    liquidityTokenBalance.save();
+    lp = new LiquidityPosition(id);
+    lp.liquidityTokenBalance = ZERO_BD;
+    lp.pairAddress = exchange;
+    lp.pair = exchange.toHexString();
+    lp.userAddress = user;
+    lp.user = user.toHexString();
+    lp.save();
     pair.save();
   }
-  return liquidityTokenBalance as LiquidityPosition;
+  return lp as LiquidityPosition;
 }
 
 export function createUser(address: Address): void {

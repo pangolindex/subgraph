@@ -120,7 +120,9 @@ type User @entity {
 
 type LiquidityPosition @entity {
   id: ID!
+  userAddress: Bytes!
   user: User!
+  pairAddress: Bytes!
   pair: Pair!
   liquidityTokenBalance: BigDecimal!
 }
