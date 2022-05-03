@@ -7,6 +7,7 @@ import {
   Token,
   Bundle,
 } from "../generated/schema";
+import { Pair as PairTemplate } from '../generated/templates'
 import { PairCreated } from "../generated/Factory/Factory";
 import {
   FACTORY_ADDRESS,
@@ -115,7 +116,7 @@ export function handleNewPair(event: PairCreated): void {
   pair.token1Price = ZERO_BD;
 
   // create the tracked contract based on the template
-  // PairTemplate.create(event.params.pair);
+  PairTemplate.create(event.params.pair);
 
   // "cache" pair for quick off-chain lookups via tokens
   let pairCacheAB = new PairCache(token0.id + token1.id);
