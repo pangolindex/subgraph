@@ -212,15 +212,11 @@ export function handlePoolSet(event: PoolSet): void {
   let farm = Farm.load(farmKey);
 
   if (farm !== null) {
-    farm.allocPoint = allocPoint;
-
     // if we want to overwrite then update rewarder in farm
     if (overwrite) {
       createUpdateReWarder(rewarderId, farmKey);
       farm.rewarder = rewarderId;
     }
-
-    farm.save();
 
     let minichef = Minichef.load(minichefKey);
     let totalAllocPoint = ZERO_BI;
@@ -231,7 +227,9 @@ export function handlePoolSet(event: PoolSet): void {
       );
     }
 
+    farm.allocPoint = allocPoint;
     createUpdateMiniChef(minichefKey, ZERO_BI, totalAllocPoint, ZERO_BI);
+    farm.save();
   }
 
   createUpdateFarmRewards(rewarder, pid, rewarderId);
