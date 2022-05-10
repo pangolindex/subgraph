@@ -16,7 +16,7 @@ import {
   Bundle,
   Farm,
   Token,
-  LiquidityPosition,
+  FarmingPosition,
   Pair,
   FarmReward,
   Minichef,
@@ -184,17 +184,17 @@ export function createLiquidityPosition(
   exchange: Address,
   user: Address,
   farmKey: string
-): LiquidityPosition {
+): FarmingPosition {
   let id = exchange
     .toHexString()
     .concat("-")
     .concat(user.toHexString());
-  let lp = LiquidityPosition.load(id);
+  let lp = FarmingPosition.load(id);
   if (lp === null) {
     let pair = Pair.load(exchange.toHexString());
     pair.liquidityProviderCount = pair.liquidityProviderCount.plus(ONE_BI);
-    lp = new LiquidityPosition(id);
-    lp.liquidityTokenBalance = ZERO_BD;
+    lp = new FarmingPosition(id);
+    lp.stakedTokenBalance = ZERO_BD;
     lp.farm = farmKey;
     lp.pairAddress = exchange;
     lp.pair = exchange.toHexString();
@@ -203,7 +203,7 @@ export function createLiquidityPosition(
     lp.save();
     pair.save();
   }
-  return lp as LiquidityPosition;
+  return lp as FarmingPosition;
 }
 
 export function createUser(address: Address): void {

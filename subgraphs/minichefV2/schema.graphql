@@ -89,7 +89,7 @@ type Farm @entity {
   minichef: Minichef!
 
   # derived fields
-  liquidityPositions: [LiquidityPosition!]! @derivedFrom(field: "farm")
+  farmingPositions: [FarmingPosition!]! @derivedFrom(field: "farm")
 }
 
 type FarmRewarder @entity {
@@ -115,18 +115,18 @@ type Minichef @entity {
 
 type User @entity {
   id: ID!
-  liquidityPositions: [LiquidityPosition!] @derivedFrom(field: "user")
+  farmingPositions: [FarmingPosition!] @derivedFrom(field: "user")
   usdSwapped: BigDecimal!
 }
 
-type LiquidityPosition @entity {
+type FarmingPosition @entity {
   id: ID!
   userAddress: Bytes!
   user: User!
   farm: Farm!
   pairAddress: Bytes!
   pair: Pair!
-  liquidityTokenBalance: BigDecimal!
+  stakedTokenBalance: BigDecimal!
 }
 
 # stores for USD calculations

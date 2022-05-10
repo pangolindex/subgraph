@@ -65,31 +65,21 @@ export function handleDeposit(event: Deposit): void {
       event.params.user,
       farmKey
     );
-    fromUserLiquidityPosition.liquidityTokenBalance = fromUserLiquidityPosition.liquidityTokenBalance.minus(
+    fromUserLiquidityPosition.stakedTokenBalance = fromUserLiquidityPosition.stakedTokenBalance.minus(
       convertedAmount
     );
     fromUserLiquidityPosition.save();
-
-    let toUserLiquidityPosition = createLiquidityPosition(
-      farm.pairAddress as Address,
-      event.params.to,
-      farmKey
-    );
-    toUserLiquidityPosition.liquidityTokenBalance = toUserLiquidityPosition.liquidityTokenBalance.plus(
-      convertedAmount
-    );
-    toUserLiquidityPosition.save();
-  } else {
-    let toUserLP = createLiquidityPosition(
-      farm.pairAddress as Address,
-      event.params.to,
-      farmKey
-    );
-    toUserLP.liquidityTokenBalance = toUserLP.liquidityTokenBalance.plus(
-      convertedAmount
-    );
-    toUserLP.save();
   }
+
+  let toUserLiquidityPosition = createLiquidityPosition(
+    farm.pairAddress as Address,
+    event.params.to,
+    farmKey
+  );
+  toUserLiquidityPosition.stakedTokenBalance = toUserLiquidityPosition.stakedTokenBalance.plus(
+    convertedAmount
+  );
+  toUserLiquidityPosition.save();
 }
 
 export function handleWithdraw(event: Withdraw): void {
@@ -119,36 +109,26 @@ export function handleWithdraw(event: Withdraw): void {
   // user stats
   createUser(event.params.to);
 
-  if (event.params.user.notEqual(event.params.to)) {
-    let fromUserLiquidityPosition = createLiquidityPosition(
-      farm.pairAddress as Address,
-      event.params.user,
-      farmKey
-    );
-    fromUserLiquidityPosition.liquidityTokenBalance = fromUserLiquidityPosition.liquidityTokenBalance.minus(
-      convertedAmount
-    );
-    fromUserLiquidityPosition.save();
+  let fromUserLiquidityPosition = createLiquidityPosition(
+    farm.pairAddress as Address,
+    event.params.user,
+    farmKey
+  );
+  fromUserLiquidityPosition.stakedTokenBalance = fromUserLiquidityPosition.stakedTokenBalance.minus(
+    convertedAmount
+  );
+  fromUserLiquidityPosition.save();
 
+  if (event.params.user.notEqual(event.params.to)) {
     let toUserLiquidityPosition = createLiquidityPosition(
       farm.pairAddress as Address,
       event.params.to,
       farmKey
     );
-    toUserLiquidityPosition.liquidityTokenBalance = toUserLiquidityPosition.liquidityTokenBalance.plus(
+    toUserLiquidityPosition.stakedTokenBalance = toUserLiquidityPosition.stakedTokenBalance.plus(
       convertedAmount
     );
     toUserLiquidityPosition.save();
-  } else {
-    let toUserLP = createLiquidityPosition(
-      farm.pairAddress as Address,
-      event.params.to,
-      farmKey
-    );
-    toUserLP.liquidityTokenBalance = toUserLP.liquidityTokenBalance.minus(
-      convertedAmount
-    );
-    toUserLP.save();
   }
 }
 
@@ -162,17 +142,17 @@ export function handleEmergencyWithdraw(event: EmergencyWithdraw): void {
   // user stats
   createUser(event.params.to);
 
-  if (event.params.user.notEqual(event.params.to)) {
-    let fromUserLiquidityPosition = createLiquidityPosition(
-      farm.pairAddress as Address,
-      event.params.user,
-      farmKey
-    );
-    fromUserLiquidityPosition.liquidityTokenBalance = fromUserLiquidityPosition.liquidityTokenBalance.minus(
-      convertedAmount
-    );
-    fromUserLiquidityPosition.save();
+  let fromUserLiquidityPosition = createLiquidityPosition(
+    farm.pairAddress as Address,
+    event.params.user,
+    farmKey
+  );
+  fromUserLiquidityPosition.stakedTokenBalance = fromUserLiquidityPosition.stakedTokenBalance.minus(
+    convertedAmount
+  );
+  fromUserLiquidityPosition.save();
 
+  if (event.params.user.notEqual(event.params.to)) {
     farm.tvl = farm.tvl.minus(convertedAmount);
     farm.save();
 
@@ -181,20 +161,10 @@ export function handleEmergencyWithdraw(event: EmergencyWithdraw): void {
       event.params.to,
       farmKey
     );
-    toUserLiquidityPosition.liquidityTokenBalance = toUserLiquidityPosition.liquidityTokenBalance.plus(
+    toUserLiquidityPosition.stakedTokenBalance = toUserLiquidityPosition.stakedTokenBalance.plus(
       convertedAmount
     );
     toUserLiquidityPosition.save();
-  } else {
-    let toUserLP = createLiquidityPosition(
-      farm.pairAddress as Address,
-      event.params.to,
-      farmKey
-    );
-    toUserLP.liquidityTokenBalance = toUserLP.liquidityTokenBalance.minus(
-      convertedAmount
-    );
-    toUserLP.save();
   }
 }
 
