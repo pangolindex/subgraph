@@ -22,7 +22,7 @@ import {
 export function handleNewPair(event: PairCreated): void {
   // load factory (create if first exchange)
 
-  log.info('===============handleNewPair', [])
+  // log.info('===============handleNewPair', [])
 
   let factory = PangolinFactory.load(FACTORY_ADDRESS);
   if (factory === null) {

@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
-import { Address, log } from "@graphprotocol/graph-ts";
-import { Farm, FarmRewarder, Minichef } from "../generated/schema";
+import { Address } from "@graphprotocol/graph-ts";
+import { Farm, Minichef } from "../generated/schema";
 import {
   convertTokenToDecimal,
   createUser,
@@ -23,7 +23,7 @@ import {
 } from "../generated/MiniChefV2/MiniChefV2";
 
 export function handlePoolAdded(event: PoolAdded): void {
-  log.info("============== handlePoolAdded =======", []);
+  // log.info("============== handlePoolAdded =======", []);
   createFarm(
     event.address,
     event.params.pid,
@@ -34,25 +34,25 @@ export function handlePoolAdded(event: PoolAdded): void {
 }
 
 export function handleDeposit(event: Deposit): void {
-  log.info("============== handleDeposit =======", []);
+  // log.info("============== handleDeposit =======", []);
 
   let farmKey =
     event.address.toHexString() + "-" + event.params.pid.toHexString();
 
-  log.info("===================farmKey:{}", [farmKey]);
+  // log.info("===================farmKey:{}", [farmKey]);
 
   let farm = Farm.load(farmKey);
 
-  log.info("===================  farm.tvl before plus :{}", [
-    farm.tvl.toString(),
-  ]);
+  // log.info("===================  farm.tvl before plus :{}", [
+  //   farm.tvl.toString(),
+  // ]);
   let convertedAmount = convertTokenToDecimal(event.params.amount, BI_18);
 
   farm.tvl = farm.tvl.plus(convertedAmount);
 
-  log.info("===================  farm.tvl after plus :{}", [
-    farm.tvl.toString(),
-  ]);
+  // log.info("===================  farm.tvl after plus :{}", [
+  //   farm.tvl.toString(),
+  // ]);
 
   farm.save();
 
@@ -93,26 +93,26 @@ export function handleDeposit(event: Deposit): void {
 }
 
 export function handleWithdraw(event: Withdraw): void {
-  log.info("============== handleWithdraw =======", []);
+  // log.info("============== handleWithdraw =======", []);
 
   let farmKey =
     event.address.toHexString() + "-" + event.params.pid.toHexString();
 
-  log.info("===================farmKey:{}", [farmKey]);
+  // log.info("===================farmKey:{}", [farmKey]);
 
   let farm = Farm.load(farmKey);
 
-  log.info("===================  farm.tvl before minus :{}", [
-    farm.tvl.toString(),
-  ]);
+  // log.info("===================  farm.tvl before minus :{}", [
+  //   farm.tvl.toString(),
+  // ]);
 
   let convertedAmount = convertTokenToDecimal(event.params.amount, BI_18);
 
   farm.tvl = farm.tvl.minus(convertedAmount);
 
-  log.info("===================  farm.tvl after minus :{}", [
-    farm.tvl.toString(),
-  ]);
+  // log.info("===================  farm.tvl after minus :{}", [
+  //   farm.tvl.toString(),
+  // ]);
 
   farm.save();
 
@@ -199,7 +199,7 @@ export function handleEmergencyWithdraw(event: EmergencyWithdraw): void {
 }
 
 export function handlePoolSet(event: PoolSet): void {
-  log.info("============== handlePoolSet =======", []);
+  // log.info("============== handlePoolSet =======", []);
 
   let allocPoint = event.params.allocPoint;
   let overwrite = event.params.overwrite;
@@ -236,11 +236,11 @@ export function handlePoolSet(event: PoolSet): void {
 }
 
 export function handleLogRewardPerSecond(event: LogRewardPerSecond): void {
-  log.info(
-    "============== handleLogRewardPerSecond =======" +
-      event.params.rewardPerSecond.toString(),
-    []
-  );
+  // log.info(
+  //   "============== handleLogRewardPerSecond =======" +
+  //     event.params.rewardPerSecond.toString(),
+  //   []
+  // );
 
   createUpdateMiniChef(
     event.address.toHexString(),
@@ -251,11 +251,11 @@ export function handleLogRewardPerSecond(event: LogRewardPerSecond): void {
 }
 
 export function handleLogRewardsExpiration(event: LogRewardsExpiration): void {
-  log.info(
-    "============== handleLogRewardsExpiration =======" +
-      event.params.rewardsExpiration.toString(),
-    []
-  );
+  // log.info(
+  //   "============== handleLogRewardsExpiration =======" +
+  //     event.params.rewardsExpiration.toString(),
+  //   []
+  // );
 
   createUpdateMiniChef(
     event.address.toHexString(),
