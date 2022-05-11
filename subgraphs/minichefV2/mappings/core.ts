@@ -162,7 +162,6 @@ let MINING_POOLS: string[] = [
 ];
 
 export function handleTransfer(event: Transfer): void {
-  // log.info("======== handleTransfer ========", []);
   let eventToAsHexString = event.params.to.toHexString();
   let eventFromAsHexString = event.params.from.toHexString();
 
@@ -202,7 +201,6 @@ export function handleTransfer(event: Transfer): void {
 }
 
 export function handleSync(event: Sync): void {
-  // log.info("======== handleSync ========", []);
   let pair = Pair.load(event.address.toHex());
   let token0 = Token.load(pair.token0);
   let token1 = Token.load(pair.token1);

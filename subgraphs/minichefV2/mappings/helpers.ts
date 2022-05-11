@@ -132,43 +132,26 @@ export function fetchTokenDecimals(tokenAddress: Address): BigInt {
 }
 
 export function fetchRewardTokens(rewarderAddress: Address): Array<Address> {
-  // log.info("===================fetchRewardTokens:  rewarderAddress:{}", [
-  //   rewarderAddress.toHexString(),
-  // ]);
-
   let contract = RewarderViaMultiplier.bind(rewarderAddress);
   let totalRewardTokenValue = [] as Array<Address>;
   let totalRewardTokenResult = contract.try_getRewardTokens();
 
-  // log.info("====totalRewardTokenValue", []);
-
   if (!totalRewardTokenResult.reverted) {
     totalRewardTokenValue = totalRewardTokenResult.value;
   }
-  // log.info(
-  //   "#######===totalRewardTokenValue================= {}==============",
-  //   [totalRewardTokenValue[0].toHexString()]
-  // );
+
   return totalRewardTokenValue;
 }
 
 export function fetchRewardMultipliers(
   rewarderAddress: Address
 ): Array<BigInt> {
-  // log.info("===================fetchRewardMultipliers:  rewarderAddress:{}", [
-  //   rewarderAddress.toHexString(),
-  // ]);
-
   let contract = RewarderViaMultiplier.bind(rewarderAddress);
   let totalRewardMultiplierValue = [] as Array<BigInt>;
   let totalRewardMultiplierResult = contract.try_getRewardMultipliers();
   if (!totalRewardMultiplierResult.reverted) {
     totalRewardMultiplierValue = totalRewardMultiplierResult.value;
   }
-
-  // log.info("====totalRewardMultiplierValue {}", [
-  //   totalRewardMultiplierValue[0].toString(),
-  // ]);
 
   return totalRewardMultiplierValue as Array<BigInt>;
 }
@@ -274,16 +257,6 @@ export function createFarm(
   rewarderAddress: Address,
   allocPoint: BigInt
 ): void {
-  // log.info(
-  //   "===================FarmCreate: address : {}, pid: {},  pair: {}, rewarderAddress:{}",
-  //   [
-  //     chef.toHexString(),
-  //     pid.toHexString(),
-  //     pair.toHexString(),
-  //     rewarderAddress.toHexString(),
-  //   ]
-  // );
-
   let minichefKey = chef.toHexString();
 
   let minichef = Minichef.load(minichefKey);
@@ -330,34 +303,17 @@ export function createUpdateFarmRewards(
   rewarderAddress: Address,
   pid: BigInt
 ): void {
-  // log.info("===================createReward {}", [
-  //   rewarderAddress.toHexString(),
-  // ]);
   let rewarderId = rewarderAddress.toHexString() + "-" + pid.toHexString();
   let farmRewarder = FarmRewarder.load(rewarderId);
 
-  // log.info("===================createReward farmRewarder id==== {}", [
-  //   farmRewarder.id,
-  // ]);
-
   if (farmRewarder === null) {
-    // log.info("===================createReward farm loaded", []);
-
     // create default reward only if we creating farm rewards
     let defaultRewardKey =
       rewarderAddress.toHexString() + "-" + PNG_ADDRESS + "-" + pid.toString();
 
-    // log.info("===================defaultReward saved===={}", [
-    //   defaultRewardKey,
-    // ]);
-
     createFarmReward(defaultRewardKey, PNG_ADDRESS, ONE_BI, rewarderId);
 
-    // log.info("===================Before IF Condition====", []);
     if (rewarderAddress.toHexString() != ADDRESS_ZERO) {
-      // log.info("===================extra reward found===={}", [
-      //   rewarderAddress.toHexString(),
-      // ]);
       let rewardTokens = fetchRewardTokens(rewarderAddress);
       let multipliers = fetchRewardMultipliers(rewarderAddress);
 
@@ -366,10 +322,6 @@ export function createUpdateFarmRewards(
           let rewarderAddrKey = rewarderAddress.toHexString();
           let rewardTokensKey = rewardTokens[i].toHexString();
 
-          // log.info("===================extra reward rewardTokensKey:{}", [
-          //   rewardTokens[i].toHexString(),
-          // ]);
-
           let rewardKey =
             rewarderAddrKey +
             "-" +
@@ -377,7 +329,6 @@ export function createUpdateFarmRewards(
             "-" +
             BigInt.fromI32(i).toString();
 
-          // log.info("===================extra reward rewardKey:{}", [rewardKey]);
           let multiplier = multipliers[i];
           createFarmReward(rewardKey, rewardTokensKey, multiplier, rewarderId);
         }
