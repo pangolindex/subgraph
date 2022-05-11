@@ -292,10 +292,7 @@ export function createFarm(
 
     createUpdateRewarder(rewarderId, farmKey);
 
-    // check rewarderAddress not ZERO ADDRESS
-    if (rewarderAddress.toHexString() !== ADDRESS_ZERO) {
-      createUpdateFarmRewards(rewarderAddress, pid);
-    }
+    createUpdateFarmRewards(rewarderAddress, pid);
   }
 }
 
