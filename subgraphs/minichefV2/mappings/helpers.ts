@@ -156,7 +156,7 @@ export function fetchRewardMultipliers(
   return totalRewardMultiplierValue as Array<BigInt>;
 }
 
-export function createLiquidityPosition(
+export function createStakingPosition(
   exchange: Address,
   user: Address,
   farmKey: string
