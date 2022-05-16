@@ -303,35 +303,33 @@ export function createUpdateFarmRewards(
   let rewarderId = rewarderAddress.toHexString() + "-" + pid.toHexString();
   let farmRewarder = FarmRewarder.load(rewarderId);
 
-  if (farmRewarder === null) {
-    // create default reward only if we creating farm rewards
-    let defaultRewardKey =
-      rewarderAddress.toHexString() + "-" + PNG_ADDRESS + "-" + pid.toString();
+  if (farmRewarder === null) return;
 
-    createFarmReward(defaultRewardKey, PNG_ADDRESS, ONE_BI, rewarderId);
+  // create default reward only if we creating farm rewards
+  let defaultRewardKey =
+    rewarderAddress.toHexString() + "-" + PNG_ADDRESS + "-" + pid.toString();
 
-    if (rewarderAddress.toHexString() != ADDRESS_ZERO) {
-      let rewardTokens = fetchRewardTokens(rewarderAddress);
-      let multipliers = fetchRewardMultipliers(rewarderAddress);
+  createFarmReward(defaultRewardKey, PNG_ADDRESS, ONE_BI, rewarderId);
 
-      if (Array.isArray(rewardTokens)) {
-        for (let i = 0; i < rewardTokens.length; ++i) {
-          let rewarderAddrKey = rewarderAddress.toHexString();
-          let rewardTokensKey = rewardTokens[i].toHexString();
+  if (rewarderAddress.toHexString() != ADDRESS_ZERO) {
+    let rewardTokens = fetchRewardTokens(rewarderAddress);
+    let multipliers = fetchRewardMultipliers(rewarderAddress);
 
-          let rewardKey =
-            rewarderAddrKey +
-            "-" +
-            rewardTokensKey +
-            "-" +
-            BigInt.fromI32(i).toString();
+    if (Array.isArray(rewardTokens)) {
+      for (let i = 0; i < rewardTokens.length; ++i) {
+        let rewarderAddrKey = rewarderAddress.toHexString();
+        let rewardTokensKey = rewardTokens[i].toHexString();
 
-          let multiplier = multipliers[i];
-          createFarmReward(rewardKey, rewardTokensKey, multiplier, rewarderId);
-        }
+        let rewardKey =
+          rewarderAddrKey +
+          "-" +
+          rewardTokensKey +
+          "-" +
+          BigInt.fromI32(i).toString();
+
+        let multiplier = multipliers[i];
+        createFarmReward(rewardKey, rewardTokensKey, multiplier, rewarderId);
       }
     }
-  } else {
-    return;
   }
 }
