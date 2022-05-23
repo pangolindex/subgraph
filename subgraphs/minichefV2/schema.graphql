@@ -1,0 +1,136 @@
+type PangolinFactory @entity {
+  # factory address
+  id: ID!
+
+  # pair info
+  pairCount: Int!
+
+  # total volume
+  totalVolumeUSD: BigDecimal!
+  totalVolumeETH: BigDecimal!
+
+  # untracked values - less confident USD scores
+  untrackedVolumeUSD: BigDecimal!
+
+  # total liquidity
+  totalLiquidityUSD: BigDecimal!
+  totalLiquidityETH: BigDecimal!
+
+  # transactions
+  txCount: BigInt!
+}
+
+type Token @entity {
+  # token address
+  id: ID!
+
+  # mirrored from the smart contract
+  symbol: String!
+  name: String!
+  decimals: BigInt!
+
+  # used for other stats like marketcap
+  totalSupply: BigInt!
+
+  # liquidity across all pairs
+  totalLiquidity: BigDecimal!
+
+  # derived prices
+  derivedETH: BigDecimal!
+  derivedUSD: BigDecimal!
+
+  pairBase: [Pair!]! @derivedFrom(field: "token0")
+  pairQuote: [Pair!]! @derivedFrom(field: "token1")
+}
+
+type Pair @entity {
+  # pair address
+  id: ID!
+
+  # mirrored from the smart contract
+  token0: Token!
+  token1: Token!
+  reserve0: BigDecimal!
+  reserve1: BigDecimal!
+  totalSupply: BigDecimal!
+
+  # derived liquidity
+  reserveETH: BigDecimal!
+  reserveUSD: BigDecimal!
+  trackedReserveETH: BigDecimal! # used for separating per pair reserves and global
+  trackedReserveUSD: BigDecimal! # used for separating per pair reserves and global
+  # Price in terms of the asset pair
+  token0Price: BigDecimal!
+  token1Price: BigDecimal!
+
+  # creation stats
+  createdAtTimestamp: BigInt!
+  createdAtBlockNumber: BigInt!
+
+  # Fields used to help derived relationship
+  liquidityProviderCount: BigInt! # used to detect new exchanges
+}
+
+type PairCache @entity {
+  id: ID!
+  pair: Pair!
+}
+
+type Farm @entity {
+  id: ID!
+  chefAddress: Bytes!
+  pid: BigInt!
+  pairAddress: Bytes!
+  pair: Pair!
+  rewarderAddress: Bytes
+  tvl: BigDecimal
+  allocPoint: BigInt!
+  rewarder: FarmRewarder!
+  minichef: Minichef!
+
+  # derived fields
+  farmingPositions: [FarmingPosition!]! @derivedFrom(field: "farm")
+}
+
+type FarmRewarder @entity {
+  id: ID!
+  farm: Farm!
+  rewards: [FarmReward!]! @derivedFrom(field: "rewarder")
+}
+
+type FarmReward @entity {
+  id: ID!
+  rewarder: FarmRewarder
+  token: Token!
+  multiplier: BigInt
+}
+
+type Minichef @entity {
+  id: ID!
+  totalAllocPoint: BigInt
+  rewardPerSecond: BigInt
+  rewardsExpiration: BigInt
+  farms: [Farm!]! @derivedFrom(field: "minichef")
+}
+
+type User @entity {
+  id: ID!
+  farmingPositions: [FarmingPosition!] @derivedFrom(field: "user")
+  usdSwapped: BigDecimal!
+}
+
+type FarmingPosition @entity {
+  id: ID!
+  userAddress: Bytes!
+  user: User!
+  farm: Farm!
+  pairAddress: Bytes!
+  pair: Pair!
+  stakedTokenBalance: BigDecimal!
+}
+
+# stores for USD calculations
+type Bundle @entity {
+  id: ID!
+  ethPrice: BigDecimal! # price of ETH usd
+}
