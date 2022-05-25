@@ -1,0 +1,34 @@
+specVersion: 0.0.2
+description: Pangolin is a decentralized exchange for swapping Ethereum and Avalanche assets on Avalanche.
+repository: https://github.com/pangolindex/subgraph
+schema:
+  file: ../schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Governance
+    network: avalanche
+    source:
+      startBlock: 1005510
+      address:  '0xb0Ff2b1047d9E8d294c2eD798faE3fA817F43Ee1'
+      abi: Governance
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ../src/proposal.ts
+      entities:
+        - Proposal
+      abis:
+        - name: Governance
+          file: ../../abis/governance.json
+      eventHandlers:
+        - event: ProposalCreated(uint256,address,address[],uint256[],string[],bytes[],uint256,uint256,string)
+          handler: handleNewProposal
+        - event: ProposalCanceled(uint256)
+          handler: handleUpdatedProposalCanceled
+        - event: ProposalExecuted(uint256)
+          handler: handleUpdatedProposalExecuted
+        - event: VoteCast(address,uint256,bool,uint256)
+          handler: handleVoteCast
+        - event: ProposalQueued(uint256,uint256)
+          handler: handleProposalQueued

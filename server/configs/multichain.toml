@@ -1,0 +1,31 @@
+[general]
+#https://github.com/graphprotocol/graph-node/blob/master/docs/config.md
+[store]
+[store.primary]
+connection = "postgresql://graph-node:let-me-in@postgres:5432/graph-node"
+weight = 1
+pool_size = 10
+
+[chains]
+ingestor = "block_ingestor_node"
+
+[chains.near-mainnet]
+shard = "primary"
+protocol = "near"
+#provider = [
+#    { label = "near-mainnet", type = "firehose" ,url = "https://rpc.mainnet.near.org",features = []}
+#]
+provider = [
+    { label = "near-mainnet", details = { type = "firehose", url = "$NEAR_RPC_ENDPOINT" }},
+]
+#https://github.com/streamingfast/graph-node-dev/blob/master/config/near-mainnet.toml
+
+[chains.avalanche]
+shard = "primary"
+provider = [
+    { label = "avalanche1", url = "$AVALANCHE_RPC_ENDPOINT",features = []}
+]
+[deployment]
+[[deployment.rule]]
+shard = "primary"
+indexers = [ "default" ]

@@ -1,0 +1,13 @@
+{
+  "key": "near",
+  "name": "near",
+  "vmType": "nearvm",
+  "subgraphs": ["exchange","governance","minichef"],
+  "contracts": {
+    "exchange" : {
+
+      "account": "v2.ref-finance.near",
+      "startBlock": "65489310"
+    }
+  }
+}

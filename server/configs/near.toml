@@ -1,0 +1,25 @@
+[general]
+
+[store]
+[store.primary]
+connection = "postgresql://graph-node:let-me-in@postgres:5432/graph-node"
+weight = 1
+pool_size = 10
+
+[chains]
+ingestor = "block_ingestor_node"
+
+[chains.near-mainnet]
+shard = "primary"
+protocol = "near"
+#provider = [
+#    { label = "near-mainnet", details = { type = "firehose", url = "https://mainnet.near.streamingfast.io", token = "$STREAMING_FAST_API_TOKEN" }},
+#] https://github.com/streamingfast/graph-node-dev/blob/master/config/near-mainnet.toml
+
+provider = [
+    { label = "near", url = "$SINGLE_RPC_ENDPOINT",features = []}
+]
+[deployment]
+[[deployment.rule]]
+shard = "primary"
+indexers = [ "default" ]

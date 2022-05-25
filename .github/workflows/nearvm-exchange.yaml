@@ -1,0 +1,39 @@
+name: Near Exchange publish
+env:
+  CI: true
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  Release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
+          fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+      - uses: actions/cache@v2.1.4
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Configure Git
+        run: |
+          git config --global user.name 'Pangolin'
+          git config --global user.email 'pangolindex@users.noreply.github.com'
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.node_version }}
+          registry-url: 'https://registry.npmjs.org/'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: yarn --frozen-lockfile
+        env:
+          CI: true
+      - name: Hosted Service Authentication
+        run: graph auth $GRAPH_AUTH_TOKEN
+        env:
+          GRAPH_AUTH_TOKEN: ${{ secrets.GRAPH_AUTH_TOKEN }}
+      - name: Avalanche deployment
+        run: yarn deploySubgraph --network near --subgraph exchange -e staging -v 0.0.1

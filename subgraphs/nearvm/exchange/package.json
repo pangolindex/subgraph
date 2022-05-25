@@ -1,0 +1,22 @@
+{
+  "name": "pangolin-near-subgraph",
+  "author": "Antiyro",
+  "version": "0.1.0",
+  "repository": "https://github.com/antiyro/pangolinNear",
+  "license": "MIT",
+  "scripts": {
+    "create-local": "graph create --node http://localhost:8020/ pangolindex/near-exchange",
+    "deploy-local": "graph deploy pangolindex/near-exchange --debug --ipfs http://localhost:5001 --node http://localhost:8020/",
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy antiyro/nearpangolin --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/"
+  },
+  "devDependencies": {
+    "@graphprotocol/graph-cli": "0.25.1",
+    "@graphprotocol/graph-ts": "0.25.0"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "babel-register": "^6.26.0"
+  }
+}

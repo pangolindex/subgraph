@@ -1,0 +1,55 @@
+#GRAPH_NODE_SINGLE_NETWORK=avalanche docker compose -f singlenetwork.docker-compose.yaml up
+version: '3'
+services:
+  graph-node:
+    image: graphprotocol/graph-node:a74a37e
+    ports:
+      - '8000:8000'
+      - '8001:8001'
+      - '8020:8020'
+      - '8030:8030'
+      - '8040:8040'
+    depends_on:
+      - ipfs
+      - postgres
+    environment:
+      GRAPH_NODE_CONFIG: "/etc/graph-node/config.toml"
+      GRAPH_LOG: info
+      ipfs: 'ipfs:5001'
+      AVALANCHE_RPC_ENDPOINT: ${AVALANCHE_RPC_ENDPOINT}
+      NEAR_RPC_ENDPOINT: ${NEAR_RPC_ENDPOINT}
+      GRAPH_MAX_SPEC_VERSION: 0.0.6
+      #ethereum: avalanche:https://api.avax.network/ext/bc/C/rpc
+    volumes:
+      - ./configs/multichain.toml:/etc/graph-node/config.toml
+  ipfs:
+    image: ipfs/go-ipfs:v0.4.23
+    ports:
+      - '5001:5001'
+    volumes:
+      - ./data/ipfs:/data/ipfs
+  postgres:
+    image: postgres
+    ports:
+      - '5432:5432'
+    command: ["postgres", "-cshared_preload_libraries=pg_stat_statements"]
+    environment:
+      POSTGRES_USER: graph-node
+      POSTGRES_PASSWORD: let-me-in
+      POSTGRES_DB: graph-node
+
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+  pgweb:
+    container_name: pgweb-gn
+    image: sosedoff/pgweb:0.11.10
+    restart: on-failure
+    ports:
+      - "8081:8081"
+    command: ["pgweb", "--bind=0.0.0.0", "--listen=8081", "--binary-codec=hex"]
+    links:
+      - postgres:postgres
+    environment:
+      - DATABASE_URL=postgres://graph-node:let-me-in@postgres:5432/graph-node?sslmode=disable
+    depends_on:
+      - postgres
