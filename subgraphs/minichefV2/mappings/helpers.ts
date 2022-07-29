@@ -1,20 +1,19 @@
 /* eslint-disable prefer-const */
-import { BigInt, BigDecimal, Address, log } from "@graphprotocol/graph-ts";
+import { BigInt, BigDecimal, Address } from "@graphprotocol/graph-ts";
 import { ERC20 } from "../generated/Factory/ERC20";
 import { ERC20SymbolBytes } from "../generated/Factory/ERC20SymbolBytes";
 import { ERC20NameBytes } from "../generated/Factory/ERC20NameBytes";
 import { RewarderViaMultiplier } from "../generated/MiniChefV2/RewarderViaMultiplier";
 import {
   User,
-  Bundle,
   Farm,
-  Token,
   FarmingPosition,
   Pair,
   FarmReward,
   Minichef,
   FarmRewarder,
 } from "../generated/schema";
+import { loadToken } from "./factory";
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 export const FACTORY_ADDRESS = "0xefa94DE7a4656D787667C749f7E1223D71E9FD88";
@@ -241,7 +240,7 @@ export function createFarmReward(
   multiplier: BigInt,
   rewarderId: string
 ): void {
-  let token = Token.load(tokenAddress);
+  let token = loadToken(Address.fromString(tokenAddress));
 
   let reward = new FarmReward(rewardKey);
   reward.token = token.id;
