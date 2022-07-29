@@ -130,3 +130,34 @@ export function handleNewPair(event: PairCreated): void {
   pairCacheAB.save();
   pairCacheBA.save();
 }
+
+export function loadToken(tokenAddress: Address): Token {
+  let token = Token.load(tokenAddress.toHexString());
+
+  if (token == null) {
+    token = new Token(tokenAddress.toHexString());
+    token.symbol = fetchTokenSymbol(tokenAddress);
+    token.name = fetchTokenName(tokenAddress);
+    token.totalSupply = fetchTokenTotalSupply(tokenAddress);
+    let decimals = fetchTokenDecimals(tokenAddress);
+
+    if (decimals === null) {
+      log.warning("Assuming 0 decimals for token with missing `decimal` property ({})", [tokenAddress.toHexString()]);
+      decimals = ZERO_BI;
+    }
+
+    token.decimals = decimals;
+    token.derivedETH = ZERO_BD;
+    token.derivedUSD = ZERO_BD;
+    // token.tradeVolume = ZERO_BD;
+    // token.tradeVolumeUSD = ZERO_BD;
+    // token.untrackedVolumeUSD = ZERO_BD;
+    token.totalLiquidity = ZERO_BD;
+    // token.allPairs = []
+    // token.txCount = ZERO_BI;
+
+    token.save();
+  }
+
+  return token as Token;
+}
